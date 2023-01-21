@@ -1,6 +1,4 @@
-package de.ideaonic703.gd;
-
-import java.security.Key;
+package de.ideaonic703.gd.engine;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;

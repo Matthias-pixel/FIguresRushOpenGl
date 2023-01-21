@@ -1,4 +1,4 @@
-package de.ideaonic703.gd;
+package de.ideaonic703.gd.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 
