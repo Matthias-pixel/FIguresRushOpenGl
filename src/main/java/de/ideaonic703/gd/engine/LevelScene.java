@@ -12,6 +12,7 @@ public class LevelScene extends Scene {
 
     @Override
     public void init() {
+        super.init();
         System.out.println("Message from LevelScene!");
     }
 }

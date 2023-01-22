@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import static java.lang.System.nanoTime;
+import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11C.*;
@@ -95,6 +96,11 @@ public class Window {
                 currentScene.update(dt);
 
             glfwSwapBuffers(glfwWindow);
+            /*try {
+                sleep(1000/60);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }*/
             endTime = Time.getTime();
             dt = endTime - startTime;
             startTime = endTime;

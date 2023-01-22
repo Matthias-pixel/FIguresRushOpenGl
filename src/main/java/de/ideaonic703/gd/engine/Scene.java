@@ -1,7 +1,9 @@
 package de.ideaonic703.gd.engine;
 
-public abstract class Scene {
-    public abstract void update(float dt);
+import java.nio.charset.CoderMalfunctionError;
 
-    public abstract void init();
+public abstract class Scene {
+    protected Camera camera;
+    public abstract void update(float dt);
+    public void init() {}
 }
