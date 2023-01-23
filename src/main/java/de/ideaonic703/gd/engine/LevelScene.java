@@ -5,9 +5,6 @@ public class LevelScene extends Scene {
     }
     @Override
     public void update(float dt) {
-        Window.getInstance().r = 1;
-        Window.getInstance().g = 1;
-        Window.getInstance().b = 1;
     }
 
     @Override

@@ -1,14 +1,19 @@
 package de.ideaonic703.gd.engine;
 
 import de.ideaonic703.gd.Time;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+
+import java.nio.IntBuffer;
 
 import static java.lang.System.nanoTime;
 import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.glGetIntegerv;
 import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL20.GL_MAX_TEXTURE_IMAGE_UNITS;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
@@ -30,31 +35,29 @@ public class Window {
     private int width, height;
     private String title;
     private long glfwWindow;
-    public float r = 1, g = 1, b = 1, a = 1;
-    private boolean fadeToBlack = false;
-    private float lastNanoTime = 0;
     private Scene currentScene;
 
     public static void changeScene(int newScene) {
-        switch(newScene) {
-            case 0:
+        switch (newScene) {
+            case 0 -> {
                 getInstance().currentScene = new LevelEditorScene();
                 getInstance().currentScene.init();
-                break;
-            case 1:
+                getInstance().currentScene.start();
+            }
+            case 1 -> {
                 getInstance().currentScene = new LevelScene();
                 getInstance().currentScene.init();
-                break;
-            default:
+                getInstance().currentScene.start();
+            }
+            default -> {
                 assert false : "Unknown Scene '" + newScene + "'";
-                break;
+            }
         }
     }
 
     public void run() {
         init();
-        currentScene = new LevelEditorScene();
-        currentScene.init();
+        changeScene(0);
         loop();
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
@@ -89,7 +92,7 @@ public class Window {
         float dt = -1.0f;
         while(!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
-            glClearColor(r, g, b, a);
+            glClearColor(0, 0, 0, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
             if(dt > 0)
@@ -105,5 +108,9 @@ public class Window {
             dt = endTime - startTime;
             startTime = endTime;
         }
+    }
+
+    public static Scene getScene() {
+        return getInstance().currentScene;
     }
 }
