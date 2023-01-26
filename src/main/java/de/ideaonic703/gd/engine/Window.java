@@ -57,7 +57,6 @@ public class Window {
 
     public void run() {
         init();
-        changeScene(0);
         loop();
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
@@ -84,6 +83,11 @@ public class Window {
         glfwSwapInterval(1);
         glfwShowWindow(glfwWindow);
         GL.createCapabilities();
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+        Window.changeScene(0);
     }
 
     public void loop() {
@@ -92,7 +96,7 @@ public class Window {
         float dt = -1.0f;
         while(!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
-            glClearColor(0, 0, 0, 1);
+            glClearColor(1, 1, 1, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
             if(dt > 0)

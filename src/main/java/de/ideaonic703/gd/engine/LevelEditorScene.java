@@ -1,46 +1,38 @@
 package de.ideaonic703.gd.engine;
 
 import de.ideaonic703.gd.AssetPool;
+import de.ideaonic703.gd.components.Sprite;
 import de.ideaonic703.gd.components.SpriteRenderer;
+import de.ideaonic703.gd.components.Spritesheet;
+import de.ideaonic703.gd.engine.renderer.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class LevelEditorScene extends Scene {
-
-    public LevelEditorScene() {
-
-    }
+    private GameObject obj1, obj2;
+    Spritesheet sprites;
 
     @Override
     public void init() {
+        loadResources();
         this.camera = new Camera(new Vector2f(0, 0));
         this.camera.adjustProjection();
 
-        int xOffset = 10;
-        int yOffset = 10;
-
-        float totalWidth = (float)(600 - xOffset * 2);
-        float totalHeight = (float)(300 - yOffset * 2);
-        float sizeX = totalWidth / 100.0f;
-        float sizeY = totalHeight / 100.0f;
-
-        for (int x=0; x < 100; x++) {
-            for (int y=0; y < 100; y++) {
-                float xPos = xOffset + (x * sizeX);
-                float yPos = yOffset + (y * sizeY);
-
-                GameObject go = new GameObject("Obj" + x + "" + y, new Transform(new Vector2f(xPos, yPos), new Vector2f(sizeX, sizeY)));
-                go.addComponent(new SpriteRenderer(new Vector4f(xPos / totalWidth, yPos / totalHeight, 1, 1)));
-                this.addGameObjectToScene(go);
-            }
-        }
-
-        loadResources();
+        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)), 2);
+        obj1.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/images/blendImage1.png"))));
+        obj2 = new GameObject("Object 2", new Transform(new Vector2f(200, 100), new Vector2f(256, 256)), 1);
+        obj2.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/images/blendImage2.png"))));
+        this.addGameObjectToScene(obj1);
+        this.addGameObjectToScene(obj2);
     }
 
     private void loadResources() {
         AssetPool.getShader("assets/shaders/default.glsl");
+        AssetPool.addSpritesheet("assets/images/ExampleSpritesheet.png", new Spritesheet(AssetPool.getTexture("assets/images/ExampleSpritesheet.png"), 16, 16, 26));
+        AssetPool.getTexture("assets/images/blendImage1.png");
+        AssetPool.getTexture("assets/images/blendImage2.png");
         AssetPool.freeze();
+        sprites = AssetPool.getSpritesheet("assets/images/ExampleSpritesheet.png");
     }
 
     @Override
