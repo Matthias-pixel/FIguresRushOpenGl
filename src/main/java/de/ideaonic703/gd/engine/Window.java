@@ -1,34 +1,33 @@
 package de.ideaonic703.gd.engine;
 
 import de.ideaonic703.gd.Time;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import java.nio.IntBuffer;
-
-import static java.lang.System.nanoTime;
-import static java.lang.Thread.sleep;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glGetIntegerv;
 import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL20.GL_MAX_TEXTURE_IMAGE_UNITS;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
     private static Window INSTANCE = null;
-    private Window(String title, int width, int height) {
+    private Window(String title, int width, int height, Scene startScene) {
         this.title = title;
         this.width = width;
         this.height = height;
+        this.currentScene = startScene;
     }
-    public static Window getInstance(String title, int width, int height) {
-        if(INSTANCE == null) INSTANCE = new Window(title, width, height);
+    public static Window getInstance(String title, int width, int height, Scene startScene) {
+        if(INSTANCE == null) INSTANCE = new Window(title, width, height, startScene);
         return INSTANCE;
     }
     public static Window getInstance() {
-        if(INSTANCE == null) INSTANCE = new Window("Title", 800, 600);
+        if(INSTANCE == null) INSTANCE = new Window("Title", 800, 600, new Scene() {
+            @Override
+            public void update(float dt) {
+
+            }
+        });
         return INSTANCE;
     }
 
@@ -36,27 +35,22 @@ public class Window {
     private String title;
     private long glfwWindow;
     private Scene currentScene;
+    private ImGuiLayer imGuiLayer;
 
-    public static void changeScene(int newScene) {
-        switch (newScene) {
-            case 0 -> {
-                getInstance().currentScene = new LevelEditorScene();
-                getInstance().currentScene.init();
-                getInstance().currentScene.start();
-            }
-            case 1 -> {
-                getInstance().currentScene = new LevelScene();
-                getInstance().currentScene.init();
-                getInstance().currentScene.start();
-            }
-            default -> {
-                assert false : "Unknown Scene '" + newScene + "'";
-            }
-        }
+    public static void changeScene(Scene newScene) {
+        getInstance().currentScene = newScene;
+        getInstance().currentScene.init();
+        getInstance().currentScene.start();
     }
 
+    public static int getWidth() {
+        return getInstance().width;
+    }
+    public static int getHeight() {
+        return getInstance().height;
+    }
     public void run() {
-        init();
+        Window.changeScene(this.currentScene);
         loop();
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
@@ -71,13 +65,17 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
-        glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
+        glfwWindow = glfwCreateWindow(width, height, title, glfwGetPrimaryMonitor(), NULL);
         if(glfwWindow == NULL) throw new RuntimeException("Could not create GLFW Window!");
 
         glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+        glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
+            Window.getInstance().width = newWidth;
+            Window.getInstance().height = newHeight;
+        });
 
         glfwMakeContextCurrent(glfwWindow);
         glfwSwapInterval(1);
@@ -85,9 +83,9 @@ public class Window {
         GL.createCapabilities();
 
         glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-        Window.changeScene(0);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        this.imGuiLayer = new ImGuiLayer(glfwWindow);
+        this.imGuiLayer.initImGui();
     }
 
     public void loop() {
@@ -96,12 +94,13 @@ public class Window {
         float dt = -1.0f;
         while(!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
-            glClearColor(1, 1, 1, 1);
+            glClearColor(0.2f, 0.2f, 0.2f, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
             if(dt > 0)
                 currentScene.update(dt);
 
+            this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
             /*try {
                 sleep(1000/60);

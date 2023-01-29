@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Spritesheet {
-    private Texture texture;
     private List<Sprite> sprites = new ArrayList<>();
-
+    protected Spritesheet(List<Sprite> sprites) {
+        this.sprites = sprites;
+    }
     public Spritesheet(Texture texture, int spriteWidth, int spriteHeight, int numSprites) {
-        this.texture = texture;
         int currentX = 0;
         int currentY = texture.getHeight()-spriteHeight;
         for(int i = 0; i < numSprites; i++) {
@@ -26,7 +26,7 @@ public class Spritesheet {
                     new Vector2f(leftX, bottomY),
                     new Vector2f(leftX, topY)
             };
-            Sprite sprite = new Sprite(this.texture, texCoords);
+            Sprite sprite = new Sprite(texture, texCoords);
             this.sprites.add(sprite);
             currentX += spriteWidth;
             if(currentX >= texture.getWidth()) {

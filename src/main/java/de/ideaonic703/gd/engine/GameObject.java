@@ -1,28 +1,27 @@
 package de.ideaonic703.gd.engine;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameObject {
-    private String name;
-    private List<Component> components;
+    protected List<Component> components;
     private int zIndex;
     public Transform transform;
 
-    public GameObject(String name, Transform transform, int zIndex) {
-        this.name = name;
+    public GameObject(Transform transform, int zIndex) {
         this.components = new ArrayList<>();
         this.transform = transform;
         this.zIndex = zIndex;
     }
-    public GameObject(String name) {
-        this(name, new Transform(), 0);
+    public GameObject() {
+        this(new Transform(), 0);
     }
-    public GameObject(String name, Transform transform) {
-        this(name, transform, 0);
+    public GameObject(Transform transform) {
+        this(transform, 0);
     }
-    public GameObject(String name, int zIndex) {
-        this(name, new Transform(), zIndex);
+    public GameObject(int zIndex) {
+        this(new Transform(), zIndex);
     }
 
     public <T extends Component> T getComponent(Class<T> componentClass) {
@@ -32,6 +31,15 @@ public class GameObject {
             }
         }
         return null;
+    }
+    public <T extends Component> T[] getComponents(Class<T> componentClass) {
+        List<T> result = new ArrayList<>();
+        for(Component c : components) {
+            if(componentClass.isAssignableFrom(c.getClass())) {
+                result.add(componentClass.cast(c));
+            }
+        }
+        return result.toArray((T[])Array.newInstance(componentClass, 0));
     }
     public <T extends Component> void removeComponent(Class<T> componentClass) {
         for (int i = 0; i < components.size(); i++) {
@@ -59,9 +67,15 @@ public class GameObject {
     public int getzIndex() {
         return this.zIndex;
     }
+    public void imgui() {
+        for(Component c : components) {
+            c.imgui();
+        }
+    }
 
     @Override
     public String toString() {
-        return name;
+        if(this.transform == null) return "GameObject without Transform";
+        return "gameObject at " + this.transform.toString();
     }
 }

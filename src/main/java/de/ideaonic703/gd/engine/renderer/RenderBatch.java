@@ -2,18 +2,17 @@ package de.ideaonic703.gd.engine.renderer;
 
 import de.ideaonic703.gd.AssetPool;
 import de.ideaonic703.gd.components.SpriteRenderer;
-import de.ideaonic703.gd.engine.Component;
 import de.ideaonic703.gd.engine.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class RenderBatch implements Comparable<RenderBatch> {
     //  Layout
@@ -149,8 +148,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
                 yAdd = 1.0f;
             }
             // position
-            vertices[offset] = sprite.gameObject.transform.position.x + (xAdd*sprite.gameObject.transform.scale.x);
-            vertices[offset+1] = sprite.gameObject.transform.position.y + (yAdd*sprite.gameObject.transform.scale.y);
+            vertices[offset] = sprite.gameObject.transform.getPercisePosition().x + (xAdd*sprite.gameObject.transform.scale.x);
+            vertices[offset+1] = sprite.gameObject.transform.getPercisePosition().y + (yAdd*sprite.gameObject.transform.scale.y);
 
             // color
             vertices[offset+2] = color.x;

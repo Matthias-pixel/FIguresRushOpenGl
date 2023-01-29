@@ -10,9 +10,4 @@ public class FontRenderer extends Component {
             System.out.println("FontRenderer of " + gameObject + " found SpriteRenderer");
         }
     }
-
-    @Override
-    public void update(float dt) {
-
-    }
 }

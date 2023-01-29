@@ -13,7 +13,7 @@ public class Texture {
     private int textureID;
     private int width, height;
 
-    public Texture(String filepath) {
+    public Texture(String filepath, boolean flipped) {
         this.filepath = filepath;
         textureID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -26,7 +26,7 @@ public class Texture {
         IntBuffer width = BufferUtils.createIntBuffer(1);
         IntBuffer height = BufferUtils.createIntBuffer(1);
         IntBuffer channels = BufferUtils.createIntBuffer(1);
-        stbi_set_flip_vertically_on_load(true);
+        stbi_set_flip_vertically_on_load(flipped);
         ByteBuffer image = stbi_load(filepath, width, height, channels, 0);
         if(image != null) {
             this.width = width.get(0);

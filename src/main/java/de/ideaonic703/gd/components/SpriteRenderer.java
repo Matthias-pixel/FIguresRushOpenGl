@@ -3,6 +3,7 @@ package de.ideaonic703.gd.components;
 import de.ideaonic703.gd.engine.Component;
 import de.ideaonic703.gd.engine.Transform;
 import de.ideaonic703.gd.engine.renderer.Texture;
+import imgui.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -59,4 +60,13 @@ public class SpriteRenderer extends Component {
     }
     public boolean isDirty() {return this.dirty;}
     public void clean() {this.dirty = false;}
+
+    @Override
+    public void imgui() {
+        float[] imColor = {color.x, color.y, color.z, color.w};
+        if(ImGui.colorPicker4("Color Picker: ", imColor)) {
+            this.color.set(imColor[0], imColor[1], imColor[2], imColor[3]);
+            this.dirty = true;
+        }
+    }
 }
