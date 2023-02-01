@@ -59,6 +59,7 @@ public class SpriteRenderer extends Component {
         this.color.set(color);
     }
     public boolean isDirty() {return this.dirty;}
+    public void makeDirty() {this.dirty = true;}
     public void clean() {this.dirty = false;}
 
     @Override

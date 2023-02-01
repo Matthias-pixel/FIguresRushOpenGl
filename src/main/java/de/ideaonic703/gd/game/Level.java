@@ -33,7 +33,7 @@ public class Level {
         }
     }
     public void addObject(GameObject gameObject) {
-        List<GameObject> column = this.data.get(gameObject.transform.position.x);
+        List<GameObject> column = this.data.get(gameObject.transform.getPosition().x);
         column.add(gameObject);
     }
     public GameObject[] getObjectsAt(int x, int y) {
@@ -41,12 +41,12 @@ public class Level {
         List<GameObject> columnLeft = this.data.get(x-1);
         List<GameObject> column = this.data.get(x);
         for(GameObject go : columnLeft) {
-            if(go.transform.offset.x > 0 && (go.transform.position.y == y || (go.transform.position.y == y-1 && go.transform.offset.y > 0))) {
+            if(go.transform.getOffset().x > 0 && (go.transform.getPosition().y == y || (go.transform.getPosition().y == y-1 && go.transform.getOffset().y > 0))) {
                 result.add(go);
             }
         }
         for(GameObject go : column) {
-            if(go.transform.position.y == y || (go.transform.position.y == y-1 && go.transform.offset.y > 0)) {
+            if(go.transform.getPosition().y == y || (go.transform.getPosition().y == y-1 && go.transform.getOffset().y > 0)) {
                 result.add(go);
             }
         }

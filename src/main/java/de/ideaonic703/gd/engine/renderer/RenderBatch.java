@@ -148,8 +148,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
                 yAdd = 1.0f;
             }
             // position
-            vertices[offset] = sprite.gameObject.transform.getPercisePosition().x + (xAdd*sprite.gameObject.transform.scale.x);
-            vertices[offset+1] = sprite.gameObject.transform.getPercisePosition().y + (yAdd*sprite.gameObject.transform.scale.y);
+            vertices[offset] = sprite.gameObject.transform.getPrecisePosition().x + (xAdd*sprite.gameObject.transform.getScale().x);
+            vertices[offset+1] = sprite.gameObject.transform.getPrecisePosition().y + (yAdd*sprite.gameObject.transform.getScale().y);
 
             // color
             vertices[offset+2] = color.x;

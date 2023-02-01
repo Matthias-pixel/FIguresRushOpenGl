@@ -1,12 +1,15 @@
 package de.ideaonic703.gd.engine;
 
-import static org.lwjgl.glfw.GLFW.*;
+import org.joml.Vector2f;
+
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class MouseListener {
     private static MouseListener INSTANCE;
     private double scrollX, scrollY;
-    private double xPos, yPos, lastX, lastY;
-    private boolean mouseButtonPressed[] = new boolean[3];
+    private double xPos, yPos, lastX, lastY, dragX, dragY;
+    private final boolean[] mouseButtonPressed = new boolean[3];
     private boolean isDragging;
 
     private MouseListener() {
@@ -24,11 +27,23 @@ public class MouseListener {
     }
 
     public static void mousePosCallback(long window, double xPos, double yPos) {
+        xPos = xPos * 1920 / Window.getWidth();
+        yPos = yPos * 1080 / Window.getHeight();
+        yPos = 1080-yPos;
         getInstance().lastX = getInstance().xPos;
         getInstance().lastY = getInstance().yPos;
         getInstance().xPos = xPos;
         getInstance().yPos = yPos;
-        getInstance().isDragging = getInstance().mouseButtonPressed[0] || getInstance().mouseButtonPressed[1] || getInstance().mouseButtonPressed[2];
+        boolean isDragging = getInstance().mouseButtonPressed[0] || getInstance().mouseButtonPressed[1] || getInstance().mouseButtonPressed[2];
+        if(isDragging && !getInstance().isDragging) {
+            getInstance().dragX = xPos;
+            getInstance().dragY = yPos;
+        }
+        if(!isDragging) {
+            getInstance().dragX = -1;
+            getInstance().dragY = -1;
+        }
+        getInstance().isDragging = isDragging;
     }
 
     public static void mouseButtonCallback(long window, int button, int action, int mods) {
@@ -41,7 +56,7 @@ public class MouseListener {
         }
     }
 
-    public static void mouseScrollCallback(long iwndow, double xOffset, double yOffset) {
+    public static void mouseScrollCallback(long window, double xOffset, double yOffset) {
         getInstance().scrollX = xOffset;
         getInstance().scrollY = yOffset;
     }
@@ -59,6 +74,9 @@ public class MouseListener {
 
     public static float getY() {
         return (float)getInstance().yPos;
+    }
+    public static Vector2f getPos() {
+        return new Vector2f((float) getInstance().xPos, (float) getInstance().yPos);
     }
 
     public static float getDx() {

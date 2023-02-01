@@ -18,6 +18,7 @@ public class Background {
     private ComplexSpritesheet sprites;
     private GameObject background, background2, floorLine;
     private GameObject[] groundTiles, groundTiles2;
+    private float groundTilesStartPos, groundTiles2StartPos, floorLineStartPos;
 
     public Background(int bgType, int groundType) {
         if(bgType < 1 || bgType > 20) bgType = 1;
@@ -37,7 +38,7 @@ public class Background {
                 @Override
                 public void update(float dt) {
                     super.update(dt);
-                    this.transform.setPosition(new Vector2f((-time * 100) % this.transform.scale.x, 0f));
+                    this.transform.setPrecisePosition(new Vector2f((-time * 100) % this.transform.getScale().x, 0f));
                     time += dt;
                     Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
                     this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
@@ -52,7 +53,7 @@ public class Background {
                 @Override
                 public void update(float dt) {
                     super.update(dt);
-                    this.transform.setPosition(new Vector2f(2048f - ((time * 100) % this.transform.scale.x), 0f));
+                    this.transform.setPrecisePosition(new Vector2f(2048f - ((time * 100) % this.transform.getScale().x), 0f));
                     time += dt;
                     Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
                     this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
@@ -72,13 +73,14 @@ public class Background {
                     @Override
                     public void update(float dt) {
                         super.update(dt);
-                        this.transform.setPosition(new Vector2f((finalI * textureWidth) - (time * 1000) % this.transform.scale.x, this.transform.position.y));
+                        this.transform.setPrecisePosition(new Vector2f((finalI * textureWidth) - (time * 1000) % this.transform.getScale().x, this.transform.getPrecisePositionNoOrigin().y));
                         time += dt;
                         Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
                         this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
                     }
                 };
                 groundTiles[i].addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/gdresources/groundSquare_"+ this.groundTypeString +"_001-uhd.png")), new Vector4f(1.0f, 0.0f, 1.0f, 1.0f)));
+                groundTilesStartPos = groundTiles[i].transform.getPrecisePositionNoOrigin().y;
             }
         }
         if(this.groundType >= 8) {
@@ -93,18 +95,20 @@ public class Background {
                     @Override
                     public void update(float dt) {
                         super.update(dt);
-                        this.transform.setPosition(new Vector2f((finalI * textureWidth) - (time * 1000) % this.transform.scale.x, this.transform.position.y));
+                        this.transform.setPrecisePosition(new Vector2f((finalI * textureWidth) - (time * 1000) % this.transform.getScale().x, this.transform.getPrecisePositionNoOrigin().y));
                         time += dt;
                         Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
                         this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
                     }
                 };
                 groundTiles2[i].addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/gdresources/groundSquare_"+ this.groundTypeString +"_2_001-uhd.png")), new Vector4f(1.0f, 0.0f, 1.0f, 1.0f)));
+                groundTiles2StartPos = groundTiles2[i].transform.getPrecisePositionNoOrigin().y;
             }
         }
         {
             this.floorLine = new GameObject(new Transform(new Vector2f(0, 300f), new Vector2f(1776f, 3f)), 0);
             floorLine.addComponent(new SpriteRenderer(sprites.getSprite("floorLine_001.png")));
+            this.floorLineStartPos = this.floorLine.transform.getPrecisePositionNoOrigin().y;
         }
     }
     public void addTo(Scene scene) {
@@ -119,5 +123,16 @@ public class Background {
                 scene.addGameObjectToScene(tile);
             }
         }
+    }
+    public void setGroundTileOffset(float yOffset) {
+        for(GameObject tile : this.groundTiles) {
+            tile.transform.setPrecisePosition(new Vector2f(tile.transform.getPrecisePosition().x, this.groundTilesStartPos+yOffset));
+        }
+        if(groundType >= 8) {
+            for(GameObject tile : this.groundTiles2) {
+                tile.transform.setPrecisePosition(new Vector2f(tile.transform.getPrecisePosition().x, this.groundTiles2StartPos+yOffset));
+            }
+        }
+        this.floorLine.transform.setPrecisePosition(new Vector2f(this.floorLine.transform.getPrecisePosition().x, this.floorLineStartPos+yOffset));
     }
 }

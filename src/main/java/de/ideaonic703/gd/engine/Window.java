@@ -2,6 +2,7 @@ package de.ideaonic703.gd.engine;
 
 import de.ideaonic703.gd.Time;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -22,7 +23,7 @@ public class Window {
         return INSTANCE;
     }
     public static Window getInstance() {
-        if(INSTANCE == null) INSTANCE = new Window("Title", 800, 600, new Scene() {
+        if(INSTANCE == null) INSTANCE = new Window("Title", -1, -1, new Scene() {
             @Override
             public void update(float dt) {
 
@@ -35,7 +36,7 @@ public class Window {
     private String title;
     private long glfwWindow;
     private Scene currentScene;
-    private ImGuiLayer imGuiLayer;
+    //private ImGuiLayer imGuiLayer;
 
     public static void changeScene(Scene newScene) {
         getInstance().currentScene = newScene;
@@ -65,7 +66,20 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        if(this.width <= 0 || this.height <= 0) {
+            long primaryMonitor = glfwGetPrimaryMonitor();
+            GLFWVidMode vidMode = glfwGetVideoMode(primaryMonitor);
+            if(vidMode == null) {
+                assert false : "could not get video mode for primary monitor.";
+                this.width = 1920;
+                this.height = 1080;
+            } else {
+                this.width = vidMode.width();
+                this.height = vidMode.height();
+            }
+        }
         glfwWindow = glfwCreateWindow(width, height, title, glfwGetPrimaryMonitor(), NULL);
+        //glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
         if(glfwWindow == NULL) throw new RuntimeException("Could not create GLFW Window!");
 
         glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
@@ -84,8 +98,8 @@ public class Window {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        this.imGuiLayer = new ImGuiLayer(glfwWindow);
-        this.imGuiLayer.initImGui();
+        //this.imGuiLayer = new ImGuiLayer(glfwWindow);
+        //this.imGuiLayer.initImGui();
     }
 
     public void loop() {
@@ -100,7 +114,7 @@ public class Window {
             if(dt > 0)
                 currentScene.update(dt);
 
-            this.imGuiLayer.update(dt, currentScene);
+            //this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
             /*try {
                 sleep(1000/60);

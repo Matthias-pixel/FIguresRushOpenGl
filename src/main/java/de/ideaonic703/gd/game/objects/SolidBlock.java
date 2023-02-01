@@ -29,7 +29,7 @@ public class SolidBlock extends GameObject {
     public void save(ObjectOutputStream stream) throws IOException {
         stream.writeInt(Serializer.TYPES.SOLID_BLOCK.ordinal());
         stream.writeInt(type);
-        Serializer.saveVector(stream, transform.getPercisePosition());
+        Serializer.saveVector(stream, transform.getPrecisePosition());
     }
     public static SolidBlock load(ObjectInputStream stream) throws IOException {
         int type = stream.readInt();
