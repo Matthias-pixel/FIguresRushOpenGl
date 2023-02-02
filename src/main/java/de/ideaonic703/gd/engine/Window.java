@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
@@ -66,6 +67,7 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        glfwWindowHint(GLFW_SAMPLES, 4);
         if(this.width <= 0 || this.height <= 0) {
             long primaryMonitor = glfwGetPrimaryMonitor();
             GLFWVidMode vidMode = glfwGetVideoMode(primaryMonitor);
@@ -97,6 +99,7 @@ public class Window {
         GL.createCapabilities();
 
         glEnable(GL_BLEND);
+        glEnable(GL_MULTISAMPLE);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         //this.imGuiLayer = new ImGuiLayer(glfwWindow);
         //this.imGuiLayer.initImGui();
@@ -113,6 +116,7 @@ public class Window {
 
             if(dt > 0)
                 currentScene.update(dt);
+            System.out.printf("FPS: %f%n", 1/dt);
 
             //this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
