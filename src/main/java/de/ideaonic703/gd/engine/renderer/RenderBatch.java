@@ -53,7 +53,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         this.textures = new ArrayList<>(8);
     }
 
-    public boolean addSprite(SpriteRenderer sprite) {
+    public boolean addSpriteRenderer(SpriteRenderer sprite) {
         if(!hasRoom()) return false;
         sprites[spriteCount] = sprite;
         if(sprite.getTexture() != null) {
@@ -148,8 +148,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
                 yAdd = 1.0f;
             }
             // position
-            vertices[offset] = sprite.gameObject.transform.getPrecisePosition().x + (xAdd*sprite.gameObject.transform.getScale().x);
-            vertices[offset+1] = sprite.gameObject.transform.getPrecisePosition().y + (yAdd*sprite.gameObject.transform.getScale().y);
+            vertices[offset] = sprite.getTransform().getPrecisePosition().x + (xAdd*sprite.getTransform().getScale().x);
+            vertices[offset+1] = sprite.getTransform().getPrecisePosition().y + (yAdd*sprite.getTransform().getScale().y);
 
             // color
             vertices[offset+2] = color.x;

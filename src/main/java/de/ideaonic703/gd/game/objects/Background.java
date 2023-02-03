@@ -16,8 +16,8 @@ public class Background {
     private int bgType, groundType;
     private String bgTypeString, groundTypeString;
     private ComplexSpritesheet sprites;
-    private GameObject background, background2, floorLine;
-    private GameObject[] groundTiles, groundTiles2;
+    public GameObject background, background2, floorLine;
+    public GameObject[] groundTiles, groundTiles2;
     private float groundTilesStartPos, groundTiles2StartPos, floorLineStartPos;
 
     public Background(int bgType, int groundType) {
@@ -121,6 +121,19 @@ public class Background {
         if(groundType >= 8) {
             for(GameObject tile : this.groundTiles2) {
                 scene.addGameObjectToScene(tile);
+            }
+        }
+    }
+    public void removeFrom(Scene scene) {
+        scene.removeGameObjectFromScene(this.background);
+        scene.removeGameObjectFromScene(this.background2);
+        scene.removeGameObjectFromScene(this.floorLine);
+        for(GameObject tile : this.groundTiles) {
+            scene.removeGameObjectFromScene(tile);
+        }
+        if(groundType >= 8) {
+            for(GameObject tile : this.groundTiles2) {
+                scene.removeGameObjectFromScene(tile);
             }
         }
     }

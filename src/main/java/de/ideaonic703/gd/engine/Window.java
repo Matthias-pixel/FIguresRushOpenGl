@@ -66,7 +66,7 @@ public class Window {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        //glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
         glfwWindowHint(GLFW_SAMPLES, 4);
         if(this.width <= 0 || this.height <= 0) {
             long primaryMonitor = glfwGetPrimaryMonitor();
@@ -80,8 +80,8 @@ public class Window {
                 this.height = vidMode.height();
             }
         }
-        glfwWindow = glfwCreateWindow(width, height, title, glfwGetPrimaryMonitor(), NULL);
-        //glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
+        //glfwWindow = glfwCreateWindow(width, height, title, glfwGetPrimaryMonitor(), NULL);
+        glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
         if(glfwWindow == NULL) throw new RuntimeException("Could not create GLFW Window!");
 
         glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);

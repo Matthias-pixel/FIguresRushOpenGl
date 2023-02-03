@@ -3,7 +3,6 @@ package de.ideaonic703.gd.components;
 import de.ideaonic703.gd.engine.Component;
 import de.ideaonic703.gd.engine.Transform;
 import de.ideaonic703.gd.engine.renderer.Texture;
-import imgui.ImGui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -13,6 +12,7 @@ public class SpriteRenderer extends Component {
     private Vector4f color;
     private Sprite sprite;
     private Transform lastTransform;
+    private Vector2f offset = new Vector2f(), scaleOverride;
     private boolean dirty;
 
     public SpriteRenderer(Sprite sprite, Vector4f color) {
@@ -58,16 +58,19 @@ public class SpriteRenderer extends Component {
         this.dirty = true;
         this.color.set(color);
     }
+    public void setOffset(Vector2f offset) {this.offset = new Vector2f(offset);}
+    public Vector2f getOffset() {return new Vector2f(this.offset);}
+    public void setScaleOverride(Vector2f scaleOverride) {this.scaleOverride = new Vector2f(scaleOverride);}
+    public Vector2f getScaleOverride() {return new Vector2f(this.scaleOverride);}
+    public Transform getTransform() {
+        Transform transform = this.gameObject.transform.copy();
+        Vector2f pos = transform.getPrecisePositionNoOrigin();
+        pos.add(this.offset);
+        transform.setPrecisePosition(pos);
+        if(this.scaleOverride != null) transform.setScale(this.scaleOverride);
+        return transform;
+    }
     public boolean isDirty() {return this.dirty;}
     public void makeDirty() {this.dirty = true;}
     public void clean() {this.dirty = false;}
-
-    @Override
-    public void imgui() {
-        float[] imColor = {color.x, color.y, color.z, color.w};
-        if(ImGui.colorPicker4("Color Picker: ", imColor)) {
-            this.color.set(imColor[0], imColor[1], imColor[2], imColor[3]);
-            this.dirty = true;
-        }
-    }
 }

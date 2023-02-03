@@ -2,11 +2,16 @@ package de.ideaonic703.gd;
 
 import de.ideaonic703.gd.components.ComplexSpritesheet;
 import de.ideaonic703.gd.components.Spritesheet;
+import de.ideaonic703.gd.engine.Font;
 import de.ideaonic703.gd.engine.renderer.Shader;
 import de.ideaonic703.gd.engine.renderer.Texture;
+import de.ideaonic703.gd.game.Level;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AssetPool {
@@ -15,6 +20,8 @@ public class AssetPool {
     private final static Map<String, Texture> textures = new HashMap<>();
     private final static Map<String, Spritesheet> spritesheets = new HashMap<>();
     private final static Map<String, ComplexSpritesheet> complexSpritesheets = new HashMap<>();
+    private final static List<Level> levels = new ArrayList<>();
+    private final static Map<String, Font> fonts = new HashMap<>();
 
     public static Shader getShader(String resourceName) {
         File file = new File(resourceName);
@@ -59,6 +66,53 @@ public class AssetPool {
         File file = new File(resourceName+".plist");
         assert AssetPool.complexSpritesheets.containsKey(file.getAbsolutePath()) : "Error: Complex Spritesheet '" + resourceName + "' accessed before adding.";
         return AssetPool.complexSpritesheets.getOrDefault(file.getAbsolutePath(), null);
+    }
+    public static void loadLevels() {
+        assert (AssetPool.levels.size() > 0 || !frozen) : "Levels loaded at runtime";
+        File levelDir = new File("levels");
+        File[] levelFiles = levelDir.listFiles();
+        assert levelFiles != null : "Could not read level directory.";
+        if(levelFiles == null) return;
+        for(File levelFile : levelFiles) {
+            try {
+                Level lvl = Level.load(levelFile);
+                for(int i = AssetPool.levels.size()-1; i <= lvl.getLevelID(); i++) {
+                    AssetPool.levels.add(null);
+                }
+                AssetPool.levels.set(lvl.getLevelID(), lvl);
+            } catch (IOException e) {
+                assert false : "Level loading failed for level '" + levelFile.getAbsolutePath() + "'.";
+            }
+        }
+        for(int i = 0; i <= AssetPool.levels.size()-1; i++) {
+            if(AssetPool.levels.get(i) == null) {
+                AssetPool.levels.remove(i);
+                i--;
+            }
+        }
+    }
+    public static int getLevelCount() {
+        AssetPool.loadLevels();
+        return AssetPool.levels.size();
+    }
+    public static Level[] getLevels() {
+        AssetPool.loadLevels();
+        return AssetPool.levels.toArray(new Level[1]);
+    }
+    public static Font getFont(String resourceName) {
+        File file = new File(resourceName);
+        if(fonts.containsKey(file.getAbsolutePath())) return fonts.get(file.getAbsolutePath());
+        assert !frozen : "Font '" + resourceName + "' loaded at runtime";
+        Font font;
+        try {
+            font = Font.loadFromFile(resourceName);
+        } catch(Exception e) {
+            assert false: "Texture '" + resourceName + "' could not be loaded.";
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        AssetPool.fonts.put(file.getAbsolutePath(), font);
+        return font;
     }
 
     public static void freeze() {

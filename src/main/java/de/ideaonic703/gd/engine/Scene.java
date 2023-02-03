@@ -27,6 +27,9 @@ public abstract class Scene {
             this.renderer.add(go);
         }
     }
+    public void removeGameObjectFromScene(GameObject go) {
+        this.gameObjects.remove(go);
+    }
     public abstract void update(float dt);
     public void init() {}
     public Camera getCamera() {

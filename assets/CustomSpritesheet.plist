@@ -49,6 +49,21 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
+            <key>level_selection_background.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{2288,640}</string>
+                <key>spriteSourceSize</key>
+                <string>{2288,640}</string>
+                <key>textureRect</key>
+                <string>{{1421,0},{2288,640}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
         </dict>
         <key>metadata</key>
         <dict>

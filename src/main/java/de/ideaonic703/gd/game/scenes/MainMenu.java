@@ -11,6 +11,7 @@ import org.joml.Vector4f;
 
 public class MainMenu extends Scene {
     private float playSceneTransition = 0.0f;
+    private boolean shouldTransition = false;
     private GameObject menuBackground;
     private MenuButton playButton, editorButton;
     private Background background;
@@ -55,12 +56,18 @@ public class MainMenu extends Scene {
     }
 
     @Override
+    public void start() {
+        super.start();
+    }
+
+    @Override
     public void update(float dt) {
         //System.out.printf("FPS: %f%n", 1f/dt);
         for (GameObject go : this.gameObjects) {
             go.update(dt);
         }
         if(this.playSceneTransition > 0.0f) {
+            this.shouldTransition = true;
             float originalTransition = this.playSceneTransition;
             float inverseTransition = 100f-this.playSceneTransition;
             float squareTransition = (float)Math.pow(inverseTransition*0.1f, 2f);
@@ -78,16 +85,21 @@ public class MainMenu extends Scene {
             this.playButton.transform.offsetScale(originalTransition/100f);
             this.playButton.getComponent(SpriteRenderer.class).setColor(new Vector4f(1.0f, 1.0f, 1.0f, inverseCubeTransition/100f));
             this.background.setGroundTileOffset(-cubeTransition*1.7f);
+            this.background.floorLine.getComponent(SpriteRenderer.class).setColor(new Vector4f(1, 1, 1, originalTransition/100f));
 
             this.playSceneTransition -= dt*100;
-        } else if(this.playSceneTransition < 0.0f) {
-            this.playSceneTransition = 0.0f;
+        } else if(this.playSceneTransition < 30.0f && this.shouldTransition) {
+            this.playSceneTransition = 30.0f;
+        }
+        if(this.playSceneTransition == 30.0f && this.shouldTransition) {
+            this.background.removeFrom(this);
+            this.removeGameObjectFromScene(this.menuBackground);
+            this.removeGameObjectFromScene(this.playButton);
+            this.removeGameObjectFromScene(this.editorButton);
+            this.removeGameObjectFromScene(this.menuBackground);
+            LevelSelectScreen lss = new LevelSelectScreen(this.background);
+            Window.changeScene(lss);
         }
         this.renderer.render();
-    }
-
-    @Override
-    public void imgui() {
-
     }
 }
