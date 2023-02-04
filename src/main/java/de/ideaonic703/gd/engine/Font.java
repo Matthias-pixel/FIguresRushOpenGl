@@ -123,7 +123,7 @@ public class Font {
                 }
             }
         }
-        Vector2f fixedOffset = new Vector2f(-this.letters.get(thz).xoffset, -this.letters.get(thz).yoffset);
+        Vector2f fixedOffset = new Vector2f(-this.letters.get(thz).xoffset, /*-this.letters.get(thz).yoffset*/0);
         Vector2f dynamicOffset = new Vector2f();
         if(foundKerning != null) dynamicOffset = new Vector2f(foundKerning.amount, 0);
         return fixedOffset.add(dynamicOffset);

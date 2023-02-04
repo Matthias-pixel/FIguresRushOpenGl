@@ -3,6 +3,7 @@ package de.ideaonic703.gd;
 import de.ideaonic703.gd.components.ComplexSpritesheet;
 import de.ideaonic703.gd.engine.Window;
 import de.ideaonic703.gd.game.Level;
+import de.ideaonic703.gd.game.SaveData;
 import de.ideaonic703.gd.game.scenes.MainMenu;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         Main.generateDummyLevels();
+        Main.generateDummySaveData();
         //Window window = Window.getInstance("Geometry Dash", 2560, 1440, new MainMenu());
         Window window = Window.getInstance("Geometry Dash", 1920, 1080, new MainMenu());
         window.init();
@@ -56,6 +58,19 @@ public class Main {
             backOnTrack.save();
             polargeist.save();
             dryOut.save();
+        } catch (IOException e) {
+            assert false;
+        }
+    }
+    private static void generateDummySaveData() {
+        SaveData saveData = new SaveData(new SaveData.LevelSaveData[]{
+                new SaveData.LevelSaveData(1.0f, 0.0f, new boolean[]{false, false, false}),
+                new SaveData.LevelSaveData(0.5f, 0.5f, new boolean[]{false, false, false}),
+                new SaveData.LevelSaveData(0.1f, 0.9f, new boolean[]{false, false, false}),
+                new SaveData.LevelSaveData(0.9f, 0.1f, new boolean[]{false, false, false})
+        });
+        try {
+            saveData.saveToFile("gdSave.bin");
         } catch (IOException e) {
             assert false;
         }

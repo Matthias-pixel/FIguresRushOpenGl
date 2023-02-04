@@ -14,6 +14,7 @@ public class SpriteRenderer extends Component {
     private Transform lastTransform;
     private Vector2f offset = new Vector2f(), scaleOverride;
     private boolean dirty;
+    private boolean flipY = false, flipX = false;
 
     public SpriteRenderer(Sprite sprite, Vector4f color) {
         this.dirty = true;
@@ -46,7 +47,24 @@ public class SpriteRenderer extends Component {
         return sprite.getTexture();
     }
     public Vector2f[] getTexCoords() {
-        return sprite.getTexCoords();
+        Vector2f[] texCoords = sprite.getTexCoords();
+        if(this.flipY) {
+            return new Vector2f[] {
+                    new Vector2f(texCoords[0].x, texCoords[1].y),
+                    new Vector2f(texCoords[1].x, texCoords[0].y),
+                    new Vector2f(texCoords[2].x, texCoords[3].y),
+                    new Vector2f(texCoords[3].x, texCoords[2].y)
+            };
+        } else if(this.flipX) {
+            return new Vector2f[] {
+                    new Vector2f(texCoords[2].x, texCoords[0].y),
+                    new Vector2f(texCoords[3].x, texCoords[1].y),
+                    new Vector2f(texCoords[0].x, texCoords[2].y),
+                    new Vector2f(texCoords[1].x, texCoords[3].y)
+            };
+        } else {
+            return texCoords;
+        }
     }
     public void setSprite(Sprite sprite) {
         //if(Objects.equals(sprite, this.sprite)) return;
@@ -69,6 +87,12 @@ public class SpriteRenderer extends Component {
         transform.setPrecisePosition(pos);
         if(this.scaleOverride != null) transform.setScale(this.scaleOverride);
         return transform;
+    }
+    public void flipY(boolean flipY) {
+        this.flipY = flipY;
+    }
+    public void flipX(boolean flipX) {
+        this.flipX = flipX;
     }
     public boolean isDirty() {return this.dirty;}
     public void makeDirty() {this.dirty = true;}

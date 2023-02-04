@@ -92,12 +92,13 @@ public class MainMenu extends Scene {
             this.playSceneTransition = 30.0f;
         }
         if(this.playSceneTransition == 30.0f && this.shouldTransition) {
+            LevelSelectScreen lss = new LevelSelectScreen(this.background);
+            background.addTo(lss);
             this.background.removeFrom(this);
             this.removeGameObjectFromScene(this.menuBackground);
             this.removeGameObjectFromScene(this.playButton);
             this.removeGameObjectFromScene(this.editorButton);
             this.removeGameObjectFromScene(this.menuBackground);
-            LevelSelectScreen lss = new LevelSelectScreen(this.background);
             Window.changeScene(lss);
         }
         this.renderer.render();

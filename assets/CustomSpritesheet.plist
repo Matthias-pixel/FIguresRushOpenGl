@@ -45,7 +45,7 @@
                 <key>spriteSourceSize</key>
                 <string>{250,250}</string>
                 <key>textureRect</key>
-                <string>{{0,401},{250,250}}</string>
+                <string>{{0,401},{249,249}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>
@@ -61,6 +61,36 @@
                 <string>{2288,640}</string>
                 <key>textureRect</key>
                 <string>{{1421,0},{2288,640}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>level_completion_background.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{2284,134}</string>
+                <key>spriteSourceSize</key>
+                <string>{2284,134}</string>
+                <key>textureRect</key>
+                <string>{{0,650},{2284,134}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>level_completion_fill.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{2284,134}</string>
+                <key>spriteSourceSize</key>
+                <string>{2284,134}</string>
+                <key>textureRect</key>
+                <string>{{0,784},{2284,134}}</string>
                 <key>textureRotated</key>
                 <false/>
             </dict>

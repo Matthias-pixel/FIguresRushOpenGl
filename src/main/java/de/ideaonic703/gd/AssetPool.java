@@ -6,6 +6,7 @@ import de.ideaonic703.gd.engine.Font;
 import de.ideaonic703.gd.engine.renderer.Shader;
 import de.ideaonic703.gd.engine.renderer.Texture;
 import de.ideaonic703.gd.game.Level;
+import de.ideaonic703.gd.game.SaveData;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class AssetPool {
     private final static Map<String, ComplexSpritesheet> complexSpritesheets = new HashMap<>();
     private final static List<Level> levels = new ArrayList<>();
     private final static Map<String, Font> fonts = new HashMap<>();
+    private static SaveData saveData = null;
 
     public static Shader getShader(String resourceName) {
         File file = new File(resourceName);
@@ -113,6 +115,15 @@ public class AssetPool {
         }
         AssetPool.fonts.put(file.getAbsolutePath(), font);
         return font;
+    }
+    public static SaveData getSaveData() {
+        try {
+            if (AssetPool.saveData == null) AssetPool.saveData = SaveData.loadFromFile("gdSave.bin");
+        } catch(IOException e) {
+            assert false : "Could not load save data.";
+            throw new RuntimeException(e);
+        }
+        return AssetPool.saveData;
     }
 
     public static void freeze() {

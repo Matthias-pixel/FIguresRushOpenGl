@@ -10,6 +10,7 @@ import de.ideaonic703.gd.engine.GameObject;
 import de.ideaonic703.gd.engine.Scene;
 import de.ideaonic703.gd.engine.Transform;
 import de.ideaonic703.gd.game.Level;
+import de.ideaonic703.gd.game.SaveData;
 import org.joml.Vector2f;
 
 public class LevelSelector {
@@ -18,6 +19,8 @@ public class LevelSelector {
     private float xOffset = 0;
     private float yOffset = 0.0f;
     private GameObject background, difficultyIcon, title;
+    private BigProgressBar progressBar;
+    private SaveData saveData;
 
     public LevelSelector(int index, Level level) {
         this.index = index;
@@ -25,6 +28,7 @@ public class LevelSelector {
         this.init();
     }
     private void init() {
+        this.saveData = AssetPool.getSaveData();
         ComplexSpritesheet customSpritesheet = AssetPool.getComplexSpritesheet("assets/CustomSpritesheet");
         ComplexSpritesheet spritesheet3 = AssetPool.getComplexSpritesheet("assets/gdresources/GJ_GameSheet03-uhd");
         {
@@ -75,7 +79,7 @@ public class LevelSelector {
         }
         {
             Font titleFont = AssetPool.getFont("assets/gdresources/bigFont-uhd");
-            this.title = new GameObject(new Transform(new Vector2f(1920f/2f+1920f*this.index-(1144f/2f)+200, 1080f/2f+170)), 1) {
+            this.title = new GameObject(new Transform(new Vector2f(1920f/2f+1920f*this.index-(1144f/2f)+200, 1080f/2f+145)), 1) {
                 private float pxOffset = 0, pyOffset = 0;
                 private boolean firstUpdate = true;
                 private Vector2f precisePosition;
@@ -97,23 +101,29 @@ public class LevelSelector {
             this.title.addComponent(new FontRenderer(this.level.getName(), titleFont));
             this.title.getComponent(FontRenderer.class).setScale(0.83f);
         }
+        this.progressBar = new BigProgressBar(this.index, this.saveData.getLevelSave(this.index).completion(), this.saveData.getLevelSave(this.index).practiceCompletion());
         //diffIcon_01_btn_001.png
     }
     public void setXOffset(float xOffset) {
         this.xOffset = xOffset;
+        this.progressBar.setXOffset(xOffset);
     }
     public void addToScene(Scene scene) {
         scene.addGameObjectToScene(this.background);
         scene.addGameObjectToScene(this.difficultyIcon);
         scene.addGameObjectToScene(this.title);
+        this.progressBar.addToScene(scene);
     }
     public void removeFromScene(Scene scene) {
         scene.removeGameObjectFromScene(this.background);
         scene.removeGameObjectFromScene(this.difficultyIcon);
         scene.removeGameObjectFromScene(this.title);
+        this.progressBar.removeFromScene(scene);
+
     }
 
     public void setYOffset(float yOffset) {
         this.yOffset = yOffset;
+        this.progressBar.setYOffset(yOffset);
     }
 }
