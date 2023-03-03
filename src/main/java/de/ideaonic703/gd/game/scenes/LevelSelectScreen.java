@@ -30,7 +30,7 @@ public class LevelSelectScreen extends Scene {
     @Override
     public void init() {
         super.init();
-        this.initTransition = 100.0f;
+        this.initTransition = 1.0f;
         this.camera = new Camera(new Vector2f(0, 0));
         this.camera.adjustProjection();
         for(GameObject groundTile : background.groundTiles) {
@@ -45,7 +45,6 @@ public class LevelSelectScreen extends Scene {
             levelSelectors[i] = new LevelSelector(i, levels[i]);
             levelSelectors[i].addToScene(this);
         }
-        //navArrowBtn_001.png
         {
             Sprite navButtonSprite = AssetPool.getComplexSpritesheet("assets/gdresources/GJ_GameSheet03-uhd").getSprite("navArrowBtn_001.png");
             this.navigationArrows[0] = new MenuButton(
@@ -104,9 +103,9 @@ public class LevelSelectScreen extends Scene {
         }
         if(this.initTransition > 0.0f) {
             for(int i = 0; i < this.levelSelectors.length; i++) {
-                this.levelSelectors[i].setYOffset((float) (-0.0007*Math.pow(this.initTransition, 3)));
+                this.levelSelectors[i].setYOffset((float) (Math.pow(this.initTransition, 3)*(-700)));
             }
-            this.initTransition -= Math.min(dt, 0.1f)*200;
+            this.initTransition -= Math.min(dt, 0.1f)*2;
         } else if(this.initTransition < 0.0f) {
             this.initTransition = 0.0f;
         }

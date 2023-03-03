@@ -19,6 +19,7 @@ public class LevelSelector {
     private float xOffset = 0;
     private float yOffset = 0.0f;
     private GameObject background, difficultyIcon, title;
+    private GameObject[] coinObjects = new GameObject[3];
     private BigProgressBar progressBar;
     private SaveData saveData;
 
@@ -101,6 +102,33 @@ public class LevelSelector {
             this.title.addComponent(new FontRenderer(this.level.getName(), titleFont));
             this.title.getComponent(FontRenderer.class).setScale(0.83f);
         }
+        {
+            boolean[] coins = this.saveData.getLevelSave(this.index).coins();
+            Sprite activeCoin = customSpritesheet.getSprite("coin_active.png");
+            Sprite inactiveCoin = customSpritesheet.getSprite("coin_inactive.png");
+            for(int i = 0; i < this.coinObjects.length; i++) {
+                this.coinObjects[i] = new GameObject(new Transform(new Vector2f(1920f/2f+1920f*this.index+300+88*i, 1080f/2f+45), new Vector2f(77, 77))) {
+                    private float pxOffset = 0, pyOffset = 0;
+                    private boolean firstUpdate = true;
+                    private Vector2f precisePosition;
+
+                    @Override
+                    public void update(float dt) {
+                        super.update(dt);
+                        if(firstUpdate) {
+                            firstUpdate = false;
+                            precisePosition = this.transform.getPrecisePositionNoOrigin();
+                        }
+                        if(xOffset != this.pxOffset || yOffset != this.pyOffset) {
+                            this.pxOffset = xOffset;
+                            this.pyOffset = yOffset;
+                            this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
+                        }
+                    }
+                };
+                this.coinObjects[i].addComponent(new SpriteRenderer(coins[i] ? activeCoin : inactiveCoin));
+            }
+        }
         this.progressBar = new BigProgressBar(this.index, this.saveData.getLevelSave(this.index).completion(), this.saveData.getLevelSave(this.index).practiceCompletion());
         //diffIcon_01_btn_001.png
     }
@@ -113,13 +141,18 @@ public class LevelSelector {
         scene.addGameObjectToScene(this.difficultyIcon);
         scene.addGameObjectToScene(this.title);
         this.progressBar.addToScene(scene);
+        for(int i = 0; i < this.coinObjects.length; i++) {
+            scene.addGameObjectToScene(this.coinObjects[i]);
+        }
     }
     public void removeFromScene(Scene scene) {
         scene.removeGameObjectFromScene(this.background);
         scene.removeGameObjectFromScene(this.difficultyIcon);
         scene.removeGameObjectFromScene(this.title);
         this.progressBar.removeFromScene(scene);
-
+        for(int i = 0; i < this.coinObjects.length; i++) {
+            scene.removeGameObjectFromScene(this.coinObjects[i]);
+        }
     }
 
     public void setYOffset(float yOffset) {

@@ -64,10 +64,10 @@ public class Main {
     }
     private static void generateDummySaveData() {
         SaveData saveData = new SaveData(new SaveData.LevelSaveData[]{
-                new SaveData.LevelSaveData(1.0f, 0.0f, new boolean[]{false, false, false}),
-                new SaveData.LevelSaveData(0.5f, 0.5f, new boolean[]{false, false, false}),
-                new SaveData.LevelSaveData(0.1f, 0.9f, new boolean[]{false, false, false}),
-                new SaveData.LevelSaveData(0.9f, 0.1f, new boolean[]{false, false, false})
+                new SaveData.LevelSaveData(1.0f, 0.0f, new boolean[]{false, false, true}),
+                new SaveData.LevelSaveData(0.5f, 0.5f, new boolean[]{false, true, false}),
+                new SaveData.LevelSaveData(0.1f, 0.9f, new boolean[]{false, true, true}),
+                new SaveData.LevelSaveData(0.9f, 0.1f, new boolean[]{true, false, false})
         });
         try {
             saveData.saveToFile("gdSave.bin");

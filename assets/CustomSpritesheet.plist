@@ -94,6 +94,66 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
+            <key>coin_active_border.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{175,174}</string>
+                <key>spriteSourceSize</key>
+                <string>{175,174}</string>
+                <key>textureRect</key>
+                <string>{{251,470},{175,174}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>coin_inactive_border.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{175,174}</string>
+                <key>spriteSourceSize</key>
+                <string>{175,174}</string>
+                <key>textureRect</key>
+                <string>{{426,470},{175,174}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>coin_active.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{175,174}</string>
+                <key>spriteSourceSize</key>
+                <string>{175,174}</string>
+                <key>textureRect</key>
+                <string>{{601,470},{175,174}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
+            <key>coin_inactive.png</key>
+            <dict>
+                <key>aliases</key>
+                <array/>
+                <key>spriteOffset</key>
+                <string>{0,0}</string>
+                <key>spriteSize</key>
+                <string>{175,174}</string>
+                <key>spriteSourceSize</key>
+                <string>{175,174}</string>
+                <key>textureRect</key>
+                <string>{{776,470},{175,174}}</string>
+                <key>textureRotated</key>
+                <false/>
+            </dict>
         </dict>
         <key>metadata</key>
         <dict>
