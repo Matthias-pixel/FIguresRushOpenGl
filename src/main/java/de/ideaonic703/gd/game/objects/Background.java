@@ -19,6 +19,7 @@ public class Background {
     public GameObject background, background2, floorLine;
     public GameObject[] groundTiles, groundTiles2;
     private float groundTilesStartPos, groundTiles2StartPos, floorLineStartPos;
+    private Color colorOverride = null;
 
     public Background(int bgType, int groundType) {
         if(bgType < 1 || bgType > 20) bgType = 1;
@@ -40,8 +41,10 @@ public class Background {
                     super.update(dt);
                     this.transform.setPrecisePosition(new Vector2f((-time * 100) % this.transform.getScale().x, 0f));
                     time += dt;
-                    Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
-                    this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
+                    if(colorOverride == null) {
+                        Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
+                        this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
+                    }
                 }
             };
             background.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/gdresources/game_bg_"+ this.bgTypeString +"_001-uhd.png")), new Vector4f(1.0f, 0.0f, 1.0f, 1.0f)));
@@ -55,8 +58,10 @@ public class Background {
                     super.update(dt);
                     this.transform.setPrecisePosition(new Vector2f(2048f - ((time * 100) % this.transform.getScale().x), 0f));
                     time += dt;
-                    Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
-                    this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
+                    if(colorOverride == null) {
+                        Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
+                        this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
+                    }
                 }
             };
             background2.addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/gdresources/game_bg_"+ this.bgTypeString +"_001-uhd.png")), new Vector4f(1.0f, 0.0f, 1.0f, 1.0f)));
@@ -75,8 +80,10 @@ public class Background {
                         super.update(dt);
                         this.transform.setPrecisePosition(new Vector2f((finalI * textureWidth) - (time * 1000) % this.transform.getScale().x, this.transform.getPrecisePositionNoOrigin().y));
                         time += dt;
-                        Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
-                        this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
+                        if(colorOverride == null) {
+                            Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
+                            this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
+                        }
                     }
                 };
                 groundTiles[i].addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/gdresources/groundSquare_"+ this.groundTypeString +"_001-uhd.png")), new Vector4f(1.0f, 0.0f, 1.0f, 1.0f)));
@@ -97,8 +104,10 @@ public class Background {
                         super.update(dt);
                         this.transform.setPrecisePosition(new Vector2f((finalI * textureWidth) - (time * 1000) % this.transform.getScale().x, this.transform.getPrecisePositionNoOrigin().y));
                         time += dt;
-                        Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
-                        this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
+                        if(colorOverride == null) {
+                            Color col = Color.getHSBColor((time % 40f) / 40f, 0.89f, 0.9f);
+                            this.getComponent(SpriteRenderer.class).setColor(new Vector4f(col.getRed() / 255f, col.getGreen() / 255f, col.getBlue() / 255f, 1.0f));
+                        }
                     }
                 };
                 groundTiles2[i].addComponent(new SpriteRenderer(new Sprite(AssetPool.getTexture("assets/gdresources/groundSquare_"+ this.groundTypeString +"_2_001-uhd.png")), new Vector4f(1.0f, 0.0f, 1.0f, 1.0f)));
@@ -109,6 +118,19 @@ public class Background {
             this.floorLine = new GameObject(new Transform(new Vector2f(0, 300f), new Vector2f(1776f, 3f)), 0);
             floorLine.addComponent(new SpriteRenderer(sprites.getSprite("floorLine_001.png")));
             this.floorLineStartPos = this.floorLine.transform.getPrecisePositionNoOrigin().y;
+        }
+    }
+    public void setColor(Color color) {
+        this.colorOverride = color;
+        this.background.getComponent(SpriteRenderer.class).setColor(new Vector4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1.0f));
+        this.background2.getComponent(SpriteRenderer.class).setColor(new Vector4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1.0f));
+        for(GameObject groundTile : this.groundTiles) {
+            groundTile.getComponent(SpriteRenderer.class).setColor(new Vector4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1.0f));
+        }
+        if(groundType >= 8) {
+            for(GameObject groundTile : this.groundTiles2) {
+                groundTile.getComponent(SpriteRenderer.class).setColor(new Vector4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1.0f));
+            }
         }
     }
     public void addTo(Scene scene) {
@@ -147,5 +169,18 @@ public class Background {
             }
         }
         this.floorLine.transform.setPrecisePosition(new Vector2f(this.floorLine.transform.getPrecisePosition().x, this.floorLineStartPos+yOffset));
+    }
+    public boolean hasGameObject(GameObject go) {
+        if(this.background == go) return true;
+        if(this.background2 == go) return true;
+        for(GameObject tile : this.groundTiles) {
+            if(tile == go) return true;
+        }
+        if(groundType >= 8) {
+            for(GameObject tile : this.groundTiles2) {
+                if(tile == go) return true;
+            }
+        }
+        return false;
     }
 }

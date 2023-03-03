@@ -62,6 +62,26 @@ public class Level {
         }
         return result.toArray(new GameObject[0]);
     }
+    public GameObject[] getObjectsAt(int x, int y, int width, int height) {
+        x--;
+        y--;
+        width++;
+        height++;
+        List<GameObject> result = new ArrayList<>();
+        List<List<GameObject>> colums = new ArrayList<>();
+        for(int i = -1; i < width+1; i++) {
+            if(i+x < 0 || i+x >= this.data.size()) continue;
+            colums.add(this.data.get(x+i));
+        }
+        for(List<GameObject> column : colums) {
+            for(GameObject go : column) {
+                if(go.transform.getPosition().y >= y && go.transform.getPosition().y < y+height && go.transform.getPosition().x >= x && go.transform.getPosition().x < x+width) {
+                    result.add(go);
+                }
+            }
+        }
+        return result.toArray(new GameObject[0]);
+    }
     public int getDifficulty() {
         return difficulty;
     }
@@ -123,7 +143,7 @@ public class Level {
             List<GameObject> column = new ArrayList<>(columnSize);
             for (int j = 0; j < columnSize; j++) {
                 int objectId = stream.readInt();
-                if (objectId == Serializer.TYPES.SOLID_BLOCK.ordinal()) column.add(i, SolidBlock.load(stream));
+                if (objectId == Serializer.TYPES.SOLID_BLOCK.ordinal()) column.add(SolidBlock.load(stream));
                 else
                     assert false : "Object of type '" + objectId + "' can not be deserialized.";
             }

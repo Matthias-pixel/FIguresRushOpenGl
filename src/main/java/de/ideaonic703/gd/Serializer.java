@@ -17,6 +17,16 @@ public abstract class Serializer {
         float y = stream.readFloat();
         return new Vector2f(x, y);
     }
+
+    public static void saveString(ObjectOutputStream stream, String str) throws IOException {
+        stream.writeInt(str.length());
+        stream.writeBytes(str);
+    }
+    public static String readString(ObjectInputStream stream) throws IOException {
+        byte[] result = stream.readNBytes(stream.readInt());
+        return new String(result);
+    }
+
     public enum TYPES {
         SOLID_BLOCK,
         VECTOR2F

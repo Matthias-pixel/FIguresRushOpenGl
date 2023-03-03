@@ -5,13 +5,13 @@ import de.ideaonic703.gd.components.ComplexSpritesheet;
 import de.ideaonic703.gd.components.FontRenderer;
 import de.ideaonic703.gd.components.Sprite;
 import de.ideaonic703.gd.components.SpriteRenderer;
-import de.ideaonic703.gd.engine.Font;
-import de.ideaonic703.gd.engine.GameObject;
-import de.ideaonic703.gd.engine.Scene;
-import de.ideaonic703.gd.engine.Transform;
+import de.ideaonic703.gd.engine.*;
 import de.ideaonic703.gd.game.Level;
 import de.ideaonic703.gd.game.SaveData;
+import de.ideaonic703.gd.game.scenes.Playing;
 import org.joml.Vector2f;
+
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
 public class LevelSelector {
     private int index;
@@ -42,14 +42,19 @@ public class LevelSelector {
                 @Override
                 public void update(float dt) {
                     super.update(dt);
-                    if(firstUpdate) {
+                    if (firstUpdate) {
                         firstUpdate = false;
                         precisePosition = this.transform.getPrecisePositionNoOrigin();
                     }
-                    if(xOffset != this.pxOffset || yOffset != this.pyOffset) {
+                    if (xOffset != this.pxOffset || yOffset != this.pyOffset) {
                         this.pxOffset = xOffset;
                         this.pyOffset = yOffset;
-                        this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
+                        this.transform.setPrecisePosition(new Vector2f(precisePosition.x + xOffset, precisePosition.y + yOffset));
+                    }
+                    if(this.transform.interjects(MouseListener.getPos())) {
+                        if(MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
+                            Window.changeScene(new Playing(level));
+                        }
                     }
                 }
             };

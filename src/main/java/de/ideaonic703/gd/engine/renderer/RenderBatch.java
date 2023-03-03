@@ -23,13 +23,15 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final static int COLOR_SIZE = 4;
     private final static int TEX_COORDS_SIZE = 2;
     private final static int TEX_ID_SIZE = 1;
+    private final static int SECONDARY_CAM_SIZE = 1;
 
     private final static int POS_OFFSET = 0;
     private final static int COLOR_OFFSET = POS_OFFSET+POS_SIZE*Float.BYTES;
     private final static int TEX_COORDS_OFFSET = COLOR_OFFSET+COLOR_SIZE*Float.BYTES;
     private final static int TEX_ID_OFFSET = TEX_COORDS_OFFSET+TEX_COORDS_SIZE*Float.BYTES;
+    private final static int SECONDARY_CAM_OFFSET = TEX_ID_OFFSET+SECONDARY_CAM_SIZE* Float.BYTES;
 
-    private final static int VERTEX_SIZE = POS_SIZE+COLOR_SIZE+TEX_COORDS_SIZE+TEX_ID_SIZE;
+    private final static int VERTEX_SIZE = POS_SIZE+COLOR_SIZE+TEX_COORDS_SIZE+TEX_ID_SIZE+SECONDARY_CAM_SIZE;
     private final static int VERTEX_SIZE_BYTES = VERTEX_SIZE*Float.BYTES;
 
     private final SpriteRenderer[] sprites;
@@ -83,6 +85,9 @@ public class RenderBatch implements Comparable<RenderBatch> {
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(3, TEX_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_ID_OFFSET);
         glEnableVertexAttribArray(3);
+        glVertexAttribPointer(4, SECONDARY_CAM_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, SECONDARY_CAM_OFFSET);
+        glEnableVertexAttribArray(4);
+
     }
     public void render() {
         boolean rebufferData = false;
@@ -101,7 +106,9 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
         shader.use();
         shader.uploadMat4f("uProjection", Window.getScene().getCamera().getProjectionMatrix());
+        shader.uploadMat4f("uProjection2", Window.getScene().getCamera2().getProjectionMatrix());
         shader.uploadMat4f("uView", Window.getScene().getCamera().getViewMatrix());
+        shader.uploadMat4f("uView2", Window.getScene().getCamera2().getViewMatrix());
         for(int i = 0; i < textures.size(); i++) {
             glActiveTexture(GL_TEXTURE0+i+1);
             textures.get(i).bind();
@@ -123,6 +130,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     }
     private void loadVertexProperties(int index) {
         SpriteRenderer sprite = this.sprites[index];
+        float secondaryCamera = sprite.usesSecondaryCamera() ? 1.0f : 0.0f;
         int offset = index*4*VERTEX_SIZE;
         Vector4f color = sprite.getColor();
         Vector2f[] texCoords = sprite.getTexCoords();
@@ -163,6 +171,9 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
             // Texture ID
             vertices[offset+8] = texID;
+
+            //Secondary Camera
+            vertices[offset+9] = secondaryCamera;
 
             offset += VERTEX_SIZE;
         }

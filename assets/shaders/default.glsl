@@ -1,11 +1,14 @@
 #type vertex
 #version 330 core
 uniform mat4 uProjection;
+uniform mat4 uProjection2;
 uniform mat4 uView;
+uniform mat4 uView2;
 layout (location=0) in vec3 aPos;
 layout (location=1) in vec4 aColor;
 layout (location=2) in vec2 aTexCoords;
 layout (location=3) in float aTexID;
+layout (location=4) in float secondaryProjection;
 out vec4 fColor;
 out vec2 fTexCoords;
 out float fTexID;
@@ -16,7 +19,11 @@ void main()
     fColor = aColor;
     fTexCoords = aTexCoords;
     fTexID = aTexID;
-    gl_Position = uProjection * uView * vec4(aPos, 1.0);
+    if(secondaryProjection == 1.0f) {
+        gl_Position = uProjection2 * uView2 * vec4(aPos, 1.0);
+    } else {
+        gl_Position = uProjection * uView * vec4(aPos, 1.0);
+    }
 }
 
 #type fragment

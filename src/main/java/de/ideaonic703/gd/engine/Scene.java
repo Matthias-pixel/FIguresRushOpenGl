@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class Scene {
     protected Renderer renderer = new Renderer();
-    protected Camera camera;
+    protected Camera camera, camera2 = null;
     protected boolean isRunning = false;
     protected List<GameObject> gameObjects = new ArrayList<>();
     protected GameObject activeGameObject = null;
@@ -44,4 +44,12 @@ public abstract class Scene {
         imgui();
     }
     public void imgui() {}
+
+    public Camera getCamera2() {
+        return camera2 == null ? camera : camera2;
+    }
+
+    public boolean hasSecondaryCamera() {
+        return camera2 != null;
+    }
 }

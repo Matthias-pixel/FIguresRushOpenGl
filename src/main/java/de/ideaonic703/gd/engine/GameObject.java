@@ -59,6 +59,7 @@ public class GameObject {
             c.update(dt);
         }
     }
+    public void init() {}
     public void start() {
         for(Component c : components) {
             c.start();

@@ -15,6 +15,7 @@ public class SpriteRenderer extends Component {
     private Vector2f offset = new Vector2f(), scaleOverride;
     private boolean dirty;
     private boolean flipY = false, flipX = false;
+    private boolean usesSecondaryCamera = false;
 
     public SpriteRenderer(Sprite sprite, Vector4f color) {
         this.dirty = true;
@@ -35,7 +36,7 @@ public class SpriteRenderer extends Component {
     }
     @Override
     public void update(float dt) {
-        if(!this.lastTransform.equals(this.gameObject.transform)) {
+        if(!Objects.equals(this.lastTransform, this.gameObject.transform)) {
             this.gameObject.transform.copy(this.lastTransform);
             this.dirty = true;
         }
@@ -97,4 +98,11 @@ public class SpriteRenderer extends Component {
     public boolean isDirty() {return this.dirty;}
     public void makeDirty() {this.dirty = true;}
     public void clean() {this.dirty = false;}
+
+    public boolean usesSecondaryCamera() {
+        return this.usesSecondaryCamera;
+    }
+    public void setUsedCamera(float slot) {
+        usesSecondaryCamera = slot == 1.0f;
+    }
 }

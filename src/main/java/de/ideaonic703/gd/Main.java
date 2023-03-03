@@ -4,7 +4,9 @@ import de.ideaonic703.gd.components.ComplexSpritesheet;
 import de.ideaonic703.gd.engine.Window;
 import de.ideaonic703.gd.game.Level;
 import de.ideaonic703.gd.game.SaveData;
+import de.ideaonic703.gd.game.objects.SolidBlock;
 import de.ideaonic703.gd.game.scenes.MainMenu;
+import org.joml.Vector2f;
 
 import java.io.IOException;
 
@@ -50,6 +52,7 @@ public class Main {
     }
     public static void generateDummyLevels() {
         Level stereoMadness = new Level("Stereo Madness", 1000, 14, 12, 1, 0);
+        stereoMadness.addObject(new SolidBlock(new Vector2f(10f, 0f), SolidBlock.BLOCK_DEFAULT));
         Level backOnTrack = new Level("Back On Track", 1000, 14, 12, 1, 1);
         Level polargeist = new Level("Polargeist", 1000, 14, 12, 2, 2);
         Level dryOut = new Level("Dry Out", 1000, 14, 12, 2, 3);

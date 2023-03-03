@@ -19,6 +19,10 @@ public class Camera {
         projectionMatrix.identity();
         projectionMatrix.ortho(0.0f, 1920f, 0.0f, 1080f, 0.0f, 100.0f);
     }
+    public void adjustProjection(float width, float height) {
+        projectionMatrix.identity();
+        projectionMatrix.ortho(0.0f, width, 0.0f, height, 0.0f, 100.0f);
+    }
 
     public Matrix4f getViewMatrix() {
         Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
