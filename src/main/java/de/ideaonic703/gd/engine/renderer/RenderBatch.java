@@ -9,12 +9,16 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.joml.Math.cos;
+import static org.joml.Math.sin;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class RenderBatch implements Comparable<RenderBatch> {
+    public final static float[] ROTATION_SLOTS_ANGLE = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    public final static Vector2f[] ROTATION_SLOTS_CENTER  = {new Vector2f(), new Vector2f(), new Vector2f(), new Vector2f(), new Vector2f(), new Vector2f(), new Vector2f(), new Vector2f()};
     //  Layout
     //
     //  Position            Color                           TexCoords       TexID
@@ -44,8 +48,10 @@ public class RenderBatch implements Comparable<RenderBatch> {
     private final int maxBatchSize;
     private final Shader shader;
     private int zIndex;
+    private int rotationSlot;
 
-    public RenderBatch(int maxBatchSize, int zIndex) {
+    public RenderBatch(int maxBatchSize, int zIndex, int rotationSlot) {
+        this.rotationSlot = rotationSlot;
         this.zIndex = zIndex;
         this.maxBatchSize = maxBatchSize;
         shader = AssetPool.getShader("assets/shaders/default.glsl");
@@ -128,6 +134,24 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
         shader.detach();
     }
+    private static Vector2f rotateVertex(Vector2f vertex, Vector2f center, float angle) {
+        vertex = new Vector2f(vertex);
+        float s = sin(angle);
+        float c = cos(angle);
+
+        // translate point back to origin:
+        vertex.x -= center.x;
+        vertex.y -= center.y;
+
+        // rotate point
+        float xnew = vertex.x * c - vertex.y * s;
+        float ynew = vertex.x * s + vertex.y * c;
+
+        // translate point back:
+        vertex.x = xnew + center.x;
+        vertex.y = ynew + center.y;
+        return vertex;
+    }
     private void loadVertexProperties(int index) {
         SpriteRenderer sprite = this.sprites[index];
         float secondaryCamera = sprite.usesSecondaryCamera() ? 1.0f : 0.0f;
@@ -155,9 +179,18 @@ public class RenderBatch implements Comparable<RenderBatch> {
             } else if(i == 3) {
                 yAdd = 1.0f;
             }
+
             // position
-            vertices[offset] = sprite.getTransform().getPrecisePosition().x + (xAdd*sprite.getTransform().getScale().x);
-            vertices[offset+1] = sprite.getTransform().getPrecisePosition().y + (yAdd*sprite.getTransform().getScale().y);
+            if(this.rotationSlot != 0) {
+                Vector2f position = new Vector2f(sprite.getTransform().getPrecisePosition().x + (xAdd*sprite.getTransform().getScale().x), sprite.getTransform().getPrecisePosition().y + (yAdd*sprite.getTransform().getScale().y));
+                Vector2f center = ROTATION_SLOTS_CENTER[this.rotationSlot];
+                Vector2f rotatedPosition = RenderBatch.rotateVertex(position, center, RenderBatch.ROTATION_SLOTS_ANGLE[this.rotationSlot]);
+                vertices[offset] = rotatedPosition.x;
+                vertices[offset+1] = rotatedPosition.y;
+            } else {
+                vertices[offset] = sprite.getTransform().getPrecisePosition().x + (xAdd*sprite.getTransform().getScale().x);
+                vertices[offset+1] = sprite.getTransform().getPrecisePosition().y + (yAdd*sprite.getTransform().getScale().y);
+            }
 
             // color
             vertices[offset+2] = color.x;
@@ -211,5 +244,9 @@ public class RenderBatch implements Comparable<RenderBatch> {
     @Override
     public int compareTo(RenderBatch o) {
         return Integer.compare(this.zIndex, o.getzIndex());
+    }
+
+    public int getRotationSlot() {
+        return this.rotationSlot;
     }
 }

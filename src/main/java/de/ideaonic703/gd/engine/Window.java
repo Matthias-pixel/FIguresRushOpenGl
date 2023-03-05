@@ -116,7 +116,7 @@ public class Window {
 
             if(dt > 0)
                 currentScene.update(dt);
-            System.out.printf("FPS: %f%n", 1/dt);
+            //System.out.printf("FPS: %f%n", 1/dt);
 
             //this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);

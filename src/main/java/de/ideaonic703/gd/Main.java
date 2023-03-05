@@ -52,7 +52,17 @@ public class Main {
     }
     public static void generateDummyLevels() {
         Level stereoMadness = new Level("Stereo Madness", 1000, 14, 12, 1, 0);
-        stereoMadness.addObject(new SolidBlock(new Vector2f(10f, 0f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new SolidBlock(new Vector2f(30f, 0f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new SolidBlock(new Vector2f(31f, 0f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new SolidBlock(new Vector2f(31f, 1f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new SolidBlock(new Vector2f(32f, 0f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new SolidBlock(new Vector2f(32f, 1f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new SolidBlock(new Vector2f(33f, 0f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new SolidBlock(new Vector2f(33f, 1f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new SolidBlock(new Vector2f(33f, 2f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new SolidBlock(new Vector2f(34f, 0f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new SolidBlock(new Vector2f(34f, 1f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new SolidBlock(new Vector2f(34f, 2f), SolidBlock.BLOCK_DEFAULT));
         Level backOnTrack = new Level("Back On Track", 1000, 14, 12, 1, 1);
         Level polargeist = new Level("Polargeist", 1000, 14, 12, 2, 2);
         Level dryOut = new Level("Dry Out", 1000, 14, 12, 2, 3);

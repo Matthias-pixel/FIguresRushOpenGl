@@ -60,17 +60,23 @@ public class ComplexSpritesheet {
                 }
                 for(String name : spriteMap.keySet()) {
                     SpriteMeta sprite = spriteMap.get(name);
+                    if(sprite.textureRotated) {
+                        int xTemp = sprite.textureRect[1].x;
+                        sprite.textureRect[1].x = sprite.textureRect[1].y;
+                        sprite.textureRect[1].y = xTemp;
+                    }
                     float bottomY = (sprite.getY()+sprite.getHeight())/(float)texture.getHeight();
                     float rightX = (sprite.getX()+ sprite.getWidth())/(float)texture.getWidth();
                     float leftX = sprite.getX()/(float)texture.getWidth();
                     float topY = sprite.getY()/(float)texture.getHeight();
-                    Vector2f[] texCoords = new Vector2f[]{
+                    Vector2f[] texCoords;
+                    texCoords = new Vector2f[]{
                             new Vector2f(rightX, topY),
                             new Vector2f(rightX, bottomY),
                             new Vector2f(leftX, bottomY),
                             new Vector2f(leftX, topY)
                     };
-                    spriteSheet.data.put(name, new Sprite(texture, texCoords));
+                    spriteSheet.data.put(name, new Sprite(texture, texCoords, new Vector2f(sprite.getHeight(), sprite.getWidth()), sprite.spriteOffset, sprite.textureRotated));
                 }
                 return spriteSheet;
             } catch (Exception e) {

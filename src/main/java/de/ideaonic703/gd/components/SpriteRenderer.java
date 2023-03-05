@@ -75,7 +75,7 @@ public class SpriteRenderer extends Component {
     public void setColor(Vector4f color) {
         if(Objects.equals(color, this.color)) return;
         this.dirty = true;
-        this.color.set(color);
+        this.color = color;
     }
     public void setOffset(Vector2f offset) {this.offset = new Vector2f(offset);}
     public Vector2f getOffset() {return new Vector2f(this.offset);}

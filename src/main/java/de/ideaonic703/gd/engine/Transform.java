@@ -15,6 +15,7 @@ public class Transform {
     private Vector2f scale;
     private Vector2f origin = ORIGIN_BOTTOM_LEFT;
     private float scaleOffset = 1.0f;
+    private int rotationSlot = 0;
 
     public Transform(Vector2i position, Vector2f offset, Vector2f scale) {
         this.position = position;
@@ -93,6 +94,13 @@ public class Transform {
         interjects = interjects && (pos.y > my.y && pos.y < (my.y+mySize.y));
         return interjects;
     }
+    public boolean interjects(Vector2f pos, Vector2f size) {
+        Vector2f my = getPrecisePosition();
+        Vector2f mySize = getScale();
+        boolean interjects = pos.x+size.x > my.x && pos.x < (my.x+mySize.x);
+        interjects = interjects && (pos.y+size.y > my.y && pos.y < (my.y+mySize.y));
+        return interjects;
+    }
     public void offsetScale(float scaleOffset) {
         this.scaleOffset = scaleOffset;
     }
@@ -101,5 +109,16 @@ public class Transform {
     public String toString() {
         Vector2f position = getPrecisePosition();
         return String.format("(x: %f, y: %f, width: %f, height: %f)", position.x, position.y, scale.x, scale.y);
+    }
+
+    public void setPrecisePositionNoOrigin(Vector2f position) {
+        Vector2f scaledOrigin = new Vector2f(this.origin).mul(this.getScale());
+        this.setPrecisePosition(new Vector2f(position).add(scaledOrigin));
+    }
+    public void setRotationSlot(int slot) {
+        this.rotationSlot = slot;
+    }
+    public int getRotationSlot() {
+        return this.rotationSlot;
     }
 }

@@ -46,27 +46,18 @@ public class Level {
         List<GameObject> column = this.data.get(gameObject.transform.getPosition().x);
         column.add(gameObject);
     }
-    public GameObject[] getObjectsAt(int x, int y) {
+    public GameObject[] getObjectsAt(int x) {
+        x = Math.max(1, x);
         List<GameObject> result = new ArrayList<>();
         List<GameObject> columnLeft = this.data.get(x-1);
         List<GameObject> column = this.data.get(x);
-        for(GameObject go : columnLeft) {
-            if(go.transform.getOffset().x > 0 && (go.transform.getPosition().y == y || (go.transform.getPosition().y == y-1 && go.transform.getOffset().y > 0))) {
-                result.add(go);
-            }
-        }
-        for(GameObject go : column) {
-            if(go.transform.getPosition().y == y || (go.transform.getPosition().y == y-1 && go.transform.getOffset().y > 0)) {
-                result.add(go);
-            }
-        }
+        result.addAll(columnLeft);
+        result.addAll(column);
         return result.toArray(new GameObject[0]);
     }
-    public GameObject[] getObjectsAt(int x, int y, int width, int height) {
+    public List<GameObject> getObjectsAt(int x, int width) {
         x--;
-        y--;
         width++;
-        height++;
         List<GameObject> result = new ArrayList<>();
         List<List<GameObject>> colums = new ArrayList<>();
         for(int i = -1; i < width+1; i++) {
@@ -75,12 +66,12 @@ public class Level {
         }
         for(List<GameObject> column : colums) {
             for(GameObject go : column) {
-                if(go.transform.getPosition().y >= y && go.transform.getPosition().y < y+height && go.transform.getPosition().x >= x && go.transform.getPosition().x < x+width) {
+                if(go.transform.getPosition().x >= x && go.transform.getPosition().x < x+width) {
                     result.add(go);
                 }
             }
         }
-        return result.toArray(new GameObject[0]);
+        return result;
     }
     public int getDifficulty() {
         return difficulty;
