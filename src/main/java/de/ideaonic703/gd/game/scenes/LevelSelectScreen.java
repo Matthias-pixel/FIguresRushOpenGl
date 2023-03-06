@@ -110,7 +110,7 @@ public class LevelSelectScreen extends Scene {
             this.initTransition = 0.0f;
         }
         for (GameObject go : this.gameObjects) {
-            go.update(dt);
+            if(go.update(dt)) return;
         }
         this.renderer.render();
     }

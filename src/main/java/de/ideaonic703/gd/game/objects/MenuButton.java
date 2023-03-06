@@ -19,7 +19,7 @@ public class MenuButton extends GameObject {
     private final static float fFactor = (float)Math.sqrt(1.2)/1.2f;
     private boolean isClicked = false;
     @Override
-    public void update(float dt) {
+    public boolean update(float dt) {
         super.update(dt);
         if(this.transform.interjects(MouseListener.getPos())) {
             //click
@@ -48,6 +48,7 @@ public class MenuButton extends GameObject {
             this.hoverScale = 1.0f;
             this.transform.offsetScale(g(hoverScale));
         }
+        return false;
     }
     private static float f(float x) {
         // f(x) = (x*sqrt(1.2)/1.2)^2

@@ -35,7 +35,7 @@ public class BigProgressBar {
                 private Vector2f precisePosition;
 
                 @Override
-                public void update(float dt) {
+                public boolean update(float dt) {
                     super.update(dt);
                     if(firstUpdate) {
                         firstUpdate = false;
@@ -46,6 +46,7 @@ public class BigProgressBar {
                         this.pyOffset = yOffset;
                         this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
                     }
+                    return false;
                 }
             };
             levelCompletionBackground.addComponent(new SpriteRenderer(completionBackgroundSprite, new Vector4f(0, 0, 0, 0.5f)));
@@ -59,7 +60,7 @@ public class BigProgressBar {
                 private Vector2f precisePosition;
 
                 @Override
-                public void update(float dt) {
+                public boolean update(float dt) {
                     super.update(dt);
                     if(firstUpdate) {
                         firstUpdate = false;
@@ -70,6 +71,7 @@ public class BigProgressBar {
                         this.pyOffset = yOffset;
                         this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
                     }
+                    return false;
                 }
             };
             levelCompletionFill.addComponent(new SpriteRenderer(completionFillSprite, new Vector4f(0f, 1f, 0f, 1f)));
@@ -82,7 +84,7 @@ public class BigProgressBar {
                 private Vector2f precisePosition;
 
                 @Override
-                public void update(float dt) {
+                public boolean update(float dt) {
                     super.update(dt);
                     if(firstUpdate) {
                         firstUpdate = false;
@@ -93,6 +95,7 @@ public class BigProgressBar {
                         this.pyOffset = yOffset;
                         this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
                     }
+                    return false;
                 }
             };
             practiceCompletionBackground.addComponent(new SpriteRenderer(completionBackgroundSprite, new Vector4f(0, 0, 0, 0.5f)));
@@ -106,7 +109,7 @@ public class BigProgressBar {
                 private Vector2f precisePosition;
 
                 @Override
-                public void update(float dt) {
+                public boolean update(float dt) {
                     super.update(dt);
                     if(firstUpdate) {
                         firstUpdate = false;
@@ -117,6 +120,7 @@ public class BigProgressBar {
                         this.pyOffset = yOffset;
                         this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
                     }
+                    return false;
                 }
             };
             practiceCompletionFill.addComponent(new SpriteRenderer(completionFillSprite, new Vector4f(0f, 1f, 1f, 1f)));
@@ -128,7 +132,7 @@ public class BigProgressBar {
                 private Vector2f precisePosition;
 
                 @Override
-                public void update(float dt) {
+                public boolean update(float dt) {
                     super.update(dt);
                     if(firstUpdate) {
                         firstUpdate = false;
@@ -139,6 +143,7 @@ public class BigProgressBar {
                         this.pyOffset = yOffset;
                         this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
                     }
+                    return false;
                 }
             };
             this.title.addComponent(new FontRenderer("Normal Mode", AssetPool.getFont("assets/gdresources/bigFont-uhd")));
@@ -151,7 +156,7 @@ public class BigProgressBar {
                 private Vector2f precisePosition;
 
                 @Override
-                public void update(float dt) {
+                public boolean update(float dt) {
                     super.update(dt);
                     if(firstUpdate) {
                         firstUpdate = false;
@@ -162,6 +167,7 @@ public class BigProgressBar {
                         this.pyOffset = yOffset;
                         this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
                     }
+                    return false;
                 }
             };
             this.practiceTitle.addComponent(new FontRenderer("Practice Mode", AssetPool.getFont("assets/gdresources/bigFont-uhd")));
@@ -174,7 +180,7 @@ public class BigProgressBar {
                 private Vector2f precisePosition;
 
                 @Override
-                public void update(float dt) {
+                public boolean update(float dt) {
                     super.update(dt);
                     if(firstUpdate) {
                         firstUpdate = false;
@@ -185,6 +191,7 @@ public class BigProgressBar {
                         this.pyOffset = yOffset;
                         this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
                     }
+                    return false;
                 }
             };
             this.completionText.addComponent(new FontRenderer((int)(this.completion*100)+"%", AssetPool.getFont("assets/gdresources/bigFont-uhd")));
@@ -197,7 +204,7 @@ public class BigProgressBar {
                 private Vector2f precisePosition;
 
                 @Override
-                public void update(float dt) {
+                public boolean update(float dt) {
                     super.update(dt);
                     if(firstUpdate) {
                         firstUpdate = false;
@@ -208,6 +215,7 @@ public class BigProgressBar {
                         this.pyOffset = yOffset;
                         this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
                     }
+                    return false;
                 }
             };
             this.practiceCompletionText.addComponent(new FontRenderer((int)(this.practiceCompletion*100)+"%", AssetPool.getFont("assets/gdresources/bigFont-uhd")));

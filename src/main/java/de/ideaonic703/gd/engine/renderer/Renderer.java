@@ -21,6 +21,11 @@ public class Renderer {
         FontRenderer ftr = go.getComponent(FontRenderer.class);
         if(ftr != null) add(ftr);
     }
+    public void remove(GameObject go) {
+        for(RenderBatch batch : batches) {
+            batch.remove(go);
+        }
+    }
 
     private void add(SpriteRenderer spriteRenderer) {
         boolean added = false;
@@ -48,8 +53,11 @@ public class Renderer {
     }
 
     public void render() {
+        int renderedObjects = 0;
         for(RenderBatch batch : batches) {
             batch.render();
+            renderedObjects += batch.getSpriteCount();
         }
+        System.out.println("Rendered Objects: " + renderedObjects);
     }
 }

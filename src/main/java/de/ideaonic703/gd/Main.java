@@ -4,9 +4,12 @@ import de.ideaonic703.gd.components.ComplexSpritesheet;
 import de.ideaonic703.gd.engine.Window;
 import de.ideaonic703.gd.game.Level;
 import de.ideaonic703.gd.game.SaveData;
+import de.ideaonic703.gd.game.objects.ColorTrigger;
 import de.ideaonic703.gd.game.objects.SolidBlock;
+import de.ideaonic703.gd.game.objects.Spike;
 import de.ideaonic703.gd.game.scenes.MainMenu;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 import java.io.IOException;
 
@@ -51,7 +54,8 @@ public class Main {
         AssetPool.freeze();
     }
     public static void generateDummyLevels() {
-        Level stereoMadness = new Level("Stereo Madness", 1000, 14, 12, 1, 0);
+        Level stereoMadness = new Level("Stereo Madness", 1000, 1, 1, 1, 0);
+        stereoMadness.addObject(new ColorTrigger(new Vector2f(1f, 0f), new Vector4f(0f, 0f, 0f,1), new Vector4f(0.8f, 0.2f, 0.2f,1), 8f));
         stereoMadness.addObject(new SolidBlock(new Vector2f(30f, 0f), SolidBlock.BLOCK_DEFAULT));
         stereoMadness.addObject(new SolidBlock(new Vector2f(31f, 0f), SolidBlock.BLOCK_DEFAULT));
         stereoMadness.addObject(new SolidBlock(new Vector2f(31f, 1f), SolidBlock.BLOCK_DEFAULT));
@@ -63,6 +67,8 @@ public class Main {
         stereoMadness.addObject(new SolidBlock(new Vector2f(34f, 0f), SolidBlock.BLOCK_DEFAULT));
         stereoMadness.addObject(new SolidBlock(new Vector2f(34f, 1f), SolidBlock.BLOCK_DEFAULT));
         stereoMadness.addObject(new SolidBlock(new Vector2f(34f, 2f), SolidBlock.BLOCK_DEFAULT));
+        stereoMadness.addObject(new ColorTrigger(new Vector2f(34f, 0f), new Vector4f(0.8f, 0.2f, 0.2f,1), new Vector4f(0.2f, 0.8f, 0.2f,1), 4f));
+        stereoMadness.addObject(new Spike(new Vector2f(42f, 0f), SolidBlock.BLOCK_DEFAULT));
         Level backOnTrack = new Level("Back On Track", 1000, 14, 12, 1, 1);
         Level polargeist = new Level("Polargeist", 1000, 14, 12, 2, 2);
         Level dryOut = new Level("Dry Out", 1000, 14, 12, 2, 3);

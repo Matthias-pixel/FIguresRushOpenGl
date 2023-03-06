@@ -5,6 +5,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
+import java.util.Objects;
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11C.*;
@@ -57,7 +59,7 @@ public class Window {
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
     public void init() {
@@ -67,7 +69,7 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         //glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
-        glfwWindowHint(GLFW_SAMPLES, 4);
+        glfwWindowHint(GLFW_SAMPLES, 16);
         if(this.width <= 0 || this.height <= 0) {
             long primaryMonitor = glfwGetPrimaryMonitor();
             GLFWVidMode vidMode = glfwGetVideoMode(primaryMonitor);
@@ -94,7 +96,7 @@ public class Window {
         });
 
         glfwMakeContextCurrent(glfwWindow);
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
         glfwShowWindow(glfwWindow);
         GL.createCapabilities();
 
@@ -111,20 +113,20 @@ public class Window {
         float dt = -1.0f;
         while(!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
-            glClearColor(0.2f, 0.2f, 0.2f, 1);
+            glClearColor(1f, 0f, 0f, 1);
             glClear(GL_COLOR_BUFFER_BIT);
 
             if(dt > 0)
                 currentScene.update(dt);
-            //System.out.printf("FPS: %f%n", 1/dt);
-
+            System.out.println("\n\n---------------------------");
+            System.out.printf("FPS: %f%n", 1/dt);
             //this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
-            /*try {
-                sleep(1000/60);
+            try {
+                Thread.sleep(1000/165/2);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
-            }*/
+            }
             endTime = Time.getTime();
             dt = endTime - startTime;
             startTime = endTime;

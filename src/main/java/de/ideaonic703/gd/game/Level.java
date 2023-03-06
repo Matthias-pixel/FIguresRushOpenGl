@@ -1,8 +1,10 @@
 package de.ideaonic703.gd.game;
 
 import de.ideaonic703.gd.Serializer;
-import de.ideaonic703.gd.engine.GameObject;
+import de.ideaonic703.gd.game.objects.ColorTrigger;
+import de.ideaonic703.gd.game.objects.LevelObject;
 import de.ideaonic703.gd.game.objects.SolidBlock;
+import de.ideaonic703.gd.game.objects.Spike;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,9 +13,11 @@ import java.util.Locale;
 
 public class Level {
     private static final int LEVEL_VERSION = 3;
-    private List<List<GameObject>> data;
+    public final static int MAX_HEIGHT = 1000;
+    private List<List<LevelObject>> data;
     private String name;
     private int backgroundType, floorType, difficulty, levelID;
+    private File levelFile;
 
     public Level(String name, int width, int backgroundType, int floorType, int difficulty, int levelID) {
         this.levelID = levelID;
@@ -24,7 +28,7 @@ public class Level {
         data = new ArrayList<>();
         setWidth(width);
     }
-    private Level(String name, List<List<GameObject>> data, int backgroundType, int floorType, int difficulty, int levelID) {
+    private Level(String name, List<List<LevelObject>> data, int backgroundType, int floorType, int difficulty, int levelID) {
         this.levelID = levelID;
         this.name = name;
         this.data = data;
@@ -42,30 +46,30 @@ public class Level {
             if(i >= data.size()) data.add(new ArrayList<>());
         }
     }
-    public void addObject(GameObject gameObject) {
-        List<GameObject> column = this.data.get(gameObject.transform.getPosition().x);
+    public void addObject(LevelObject gameObject) {
+        List<LevelObject> column = this.data.get(gameObject.transform.getPosition().x);
         column.add(gameObject);
     }
-    public GameObject[] getObjectsAt(int x) {
+    public LevelObject[] getObjectsAt(int x) {
         x = Math.max(1, x);
-        List<GameObject> result = new ArrayList<>();
-        List<GameObject> columnLeft = this.data.get(x-1);
-        List<GameObject> column = this.data.get(x);
+        List<LevelObject> result = new ArrayList<>();
+        List<LevelObject> columnLeft = this.data.get(x-1);
+        List<LevelObject> column = this.data.get(x);
         result.addAll(columnLeft);
         result.addAll(column);
-        return result.toArray(new GameObject[0]);
+        return result.toArray(new LevelObject[0]);
     }
-    public List<GameObject> getObjectsAt(int x, int width) {
+    public List<LevelObject> getObjectsAt(int x, int width) {
         x--;
         width++;
-        List<GameObject> result = new ArrayList<>();
-        List<List<GameObject>> colums = new ArrayList<>();
+        List<LevelObject> result = new ArrayList<>();
+        List<List<LevelObject>> colums = new ArrayList<>();
         for(int i = -1; i < width+1; i++) {
             if(i+x < 0 || i+x >= this.data.size()) continue;
             colums.add(this.data.get(x+i));
         }
-        for(List<GameObject> column : colums) {
-            for(GameObject go : column) {
+        for(List<LevelObject> column : colums) {
+            for(LevelObject go : column) {
                 if(go.transform.getPosition().x >= x && go.transform.getPosition().x < x+width) {
                     result.add(go);
                 }
@@ -99,10 +103,12 @@ public class Level {
         stream.writeInt(this.levelID);
         stream.writeObject(name);
         stream.writeInt(data.size());
-        for (List<GameObject> column : data) {
+        for (List<LevelObject> column : data) {
             stream.writeInt(column.size());
-            for (GameObject gameObject : column) {
+            for (LevelObject gameObject : column) {
                 if (gameObject instanceof SolidBlock casted) casted.save(stream);
+                else if (gameObject instanceof Spike casted) casted.save(stream);
+                else if (gameObject instanceof ColorTrigger casted) casted.save(stream);
                 else
                     assert false : gameObject + " of type '" + gameObject.getClass().getSimpleName() + "' can not be serialized.";
             }
@@ -128,19 +134,22 @@ public class Level {
             throw new IOException();
         }
         int dataSize = stream.readInt();
-        List<List<GameObject>> data = new ArrayList<>(dataSize);
+        List<List<LevelObject>> data = new ArrayList<>(dataSize);
         for (int i = 0; i < dataSize; i++) {
             int columnSize = stream.readInt();
-            List<GameObject> column = new ArrayList<>(columnSize);
+            List<LevelObject> column = new ArrayList<>(columnSize);
             for (int j = 0; j < columnSize; j++) {
                 int objectId = stream.readInt();
                 if (objectId == Serializer.TYPES.SOLID_BLOCK.ordinal()) column.add(SolidBlock.load(stream));
+                else if (objectId == Serializer.TYPES.SPIKE.ordinal()) column.add(Spike.load(stream));
+                else if (objectId == Serializer.TYPES.COLOR_TRIGGER.ordinal()) column.add(ColorTrigger.load(stream));
                 else
                     assert false : "Object of type '" + objectId + "' can not be deserialized.";
             }
             data.add(i, column);
         }
         Level nLevel = new Level(name, data, backgroundType, floorType, difficulty, levelID);
+        nLevel.levelFile = levelFile;
         //nLevel.save();
         return nLevel;
     }
@@ -176,10 +185,10 @@ public class Level {
             throw new IOException();
         }
         int dataSize = stream.readInt();
-        List<List<GameObject>> data = new ArrayList<>(dataSize);
+        List<List<LevelObject>> data = new ArrayList<>(dataSize);
         for (int i = 0; i < dataSize; i++) {
             int columnSize = stream.readInt();
-            List<GameObject> column = new ArrayList<>(columnSize);
+            List<LevelObject> column = new ArrayList<>(columnSize);
             for (int j = 0; j < columnSize; j++) {
                 int objectId = stream.readInt();
                 if (objectId == Serializer.TYPES.SOLID_BLOCK.ordinal()) column.add(i, SolidBlock.load(stream));
@@ -208,10 +217,10 @@ public class Level {
             throw new IOException();
         }
         int dataSize = stream.readInt();
-        List<List<GameObject>> data = new ArrayList<>(dataSize);
+        List<List<LevelObject>> data = new ArrayList<>(dataSize);
         for (int i = 0; i < dataSize; i++) {
             int columnSize = stream.readInt();
-            List<GameObject> column = new ArrayList<>(columnSize);
+            List<LevelObject> column = new ArrayList<>(columnSize);
             for (int j = 0; j < columnSize; j++) {
                 int objectId = stream.readInt();
                 if (objectId == Serializer.TYPES.SOLID_BLOCK.ordinal()) column.add(i, SolidBlock.load(stream));
@@ -241,10 +250,10 @@ public class Level {
             throw new IOException();
         }
         int dataSize = stream.readInt();
-        List<List<GameObject>> data = new ArrayList<>(dataSize);
+        List<List<LevelObject>> data = new ArrayList<>(dataSize);
         for (int i = 0; i < dataSize; i++) {
             int columnSize = stream.readInt();
-            List<GameObject> column = new ArrayList<>(columnSize);
+            List<LevelObject> column = new ArrayList<>(columnSize);
             for (int j = 0; j < columnSize; j++) {
                 int objectId = stream.readInt();
                 if (objectId == Serializer.TYPES.SOLID_BLOCK.ordinal()) column.add(i, SolidBlock.load(stream));
@@ -256,5 +265,13 @@ public class Level {
         Level nLevel = new Level(name, data, backgroundType, floorType, difficulty, levelID);
         //nLevel.save();
         return nLevel;
+    }
+
+    public Level reload() {
+        try {
+            return Level.load(this.levelFile);
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

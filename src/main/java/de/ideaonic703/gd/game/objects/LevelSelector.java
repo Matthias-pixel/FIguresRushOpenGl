@@ -40,7 +40,7 @@ public class LevelSelector {
                 private Vector2f precisePosition;
 
                 @Override
-                public void update(float dt) {
+                public boolean update(float dt) {
                     super.update(dt);
                     if (firstUpdate) {
                         firstUpdate = false;
@@ -54,8 +54,10 @@ public class LevelSelector {
                     if(this.transform.interjects(MouseListener.getPos())) {
                         if(MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
                             Window.changeScene(new Playing(level));
+                            return true;
                         }
                     }
+                    return false;
                 }
             };
             background.addComponent(new SpriteRenderer(backgroundSprite));
@@ -68,7 +70,7 @@ public class LevelSelector {
                 private Vector2f precisePosition;
 
                 @Override
-                public void update(float dt) {
+                public boolean update(float dt) {
                     super.update(dt);
                     if(firstUpdate) {
                         firstUpdate = false;
@@ -79,6 +81,7 @@ public class LevelSelector {
                         this.pyOffset = yOffset;
                         this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
                     }
+                    return false;
                 }
             };
             difficultyIcon.addComponent(new SpriteRenderer(difficultySprite));
@@ -91,7 +94,7 @@ public class LevelSelector {
                 private Vector2f precisePosition;
 
                 @Override
-                public void update(float dt) {
+                public boolean update(float dt) {
                     super.update(dt);
                     if(firstUpdate) {
                         firstUpdate = false;
@@ -102,6 +105,7 @@ public class LevelSelector {
                         this.pyOffset = yOffset;
                         this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
                     }
+                    return false;
                 }
             };
             this.title.addComponent(new FontRenderer(this.level.getName(), titleFont));
@@ -118,7 +122,7 @@ public class LevelSelector {
                     private Vector2f precisePosition;
 
                     @Override
-                    public void update(float dt) {
+                    public boolean update(float dt) {
                         super.update(dt);
                         if(firstUpdate) {
                             firstUpdate = false;
@@ -129,6 +133,7 @@ public class LevelSelector {
                             this.pyOffset = yOffset;
                             this.transform.setPrecisePosition(new Vector2f(precisePosition.x+xOffset, precisePosition.y+yOffset));
                         }
+                        return false;
                     }
                 };
                 this.coinObjects[i].addComponent(new SpriteRenderer(coins[i] ? activeCoin : inactiveCoin));

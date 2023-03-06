@@ -50,14 +50,20 @@ public class GameObject {
             }
         }
     }
+    public void remove() {
+        while(components.size() > 0) {
+            components.remove(0);
+        }
+    }
     public void addComponent(Component c) {
         components.add(c);
         c.gameObject = this;
     }
-    public void update(float dt) {
+    public boolean update(float dt) {
         for(Component c : components) {
             c.update(dt);
         }
+        return false;
     }
     public void init() {}
     public void start() {
